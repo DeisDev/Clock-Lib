@@ -1,0 +1,105 @@
+{
+  "properties": {
+    "showclock": {
+      "order": 10,
+      "text": "Show Clock",
+      "type": "bool",
+      "value": true
+    },
+    "clocktimeformat": {
+      "order": 11,
+      "text": "Time Format",
+      "type": "combo",
+      "value": 24,
+      "condition": "showclock = true",
+      "options": [
+        { "label": "24 Hour", "value": 24 },
+        { "label": "12 Hour", "value": 12 }
+      ]
+    },
+    "clockshowdate": {
+      "order": 12,
+      "text": "Show Date",
+      "type": "bool",
+      "value": true,
+      "condition": "showclock = true"
+    },
+    "clockshowday": {
+      "order": 13,
+      "text": "Show Day of Week",
+      "type": "bool",
+      "value": true,
+      "condition": "showclock = true"
+    },
+    "clockfont": {
+      "order": 14,
+      "text": "Font",
+      "type": "combo",
+      "value": 0,
+      "condition": "showclock = true",
+      "options": [
+        { "label": "Inter", "value": 0 },
+        { "label": "Space Grotesk", "value": 1 },
+        { "label": "DM Sans", "value": 2 },
+        { "label": "Roboto Mono", "value": 3 }
+      ]
+    },
+    "clockfontsize": {
+      "order": 15,
+      "text": "Font Size",
+      "type": "slider",
+      "value": 48,
+      "min": 16,
+      "max": 96,
+      "condition": "showclock = true"
+    },
+    "clockscale": {
+      "order": 16,
+      "text": "Scale",
+      "type": "slider",
+      "value": 1,
+      "min": 0.5,
+      "max": 3,
+      "precision": 1,
+      "step": 0.5,
+      "condition": "showclock = true"
+    },
+    "clockcolor": {
+      "order": 17,
+      "text": "Text Color",
+      "type": "color",
+      "value": "1 1 1",
+      "condition": "showclock = true"
+    },
+    "clockshadow": {
+      "order": 18,
+      "text": "Enable Shadow",
+      "type": "bool",
+      "value": true,
+      "condition": "showclock = true"
+    },
+    "clockshadowcolor": {
+      "order": 19,
+      "text": "Shadow Color",
+      "type": "color",
+      "value": "0 0 0",
+      "condition": "showclock = true && clockshadow = true"
+    },
+    "clockshadowblur": {
+      "order": 20,
+      "text": "Shadow Blur",
+      "type": "slider",
+      "value": 12,
+      "min": 0,
+      "max": 24,
+      "precision": 1,
+      "condition": "showclock = true && clockshadow = true"
+    },
+    "showwidgeteditor": {
+      "order": 50,
+      "text": "Show Widget Editor",
+      "type": "bool",
+      "value": false
+    }
+  }
+}

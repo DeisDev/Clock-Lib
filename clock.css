@@ -1,0 +1,279 @@
+/* Clock Widget */
+#clock-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 0.04em;
+  z-index: 1;
+}
+#clock-container.drag-enabled {
+  pointer-events: auto;
+  cursor: grab;
+}
+#clock-container.dragging {
+  cursor: grabbing;
+}
+#clock-time {
+  font-weight: 400;
+  line-height: 1.1;
+}
+#clock-date {
+  margin-top: 6px;
+  font-size: 18px;
+  line-height: 1.2;
+  opacity: 0.9;
+}
+
+/* Widget Editor */
+#widget-editor {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(480px, 92vw);
+  max-height: 85vh;
+  background: rgba(10, 10, 15, 0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  color: #f0f0f5;
+  font: 14px/1.5 'Segoe UI', system-ui, sans-serif;
+  display: none;
+  flex-direction: column;
+  z-index: 100;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  overflow: hidden;
+}
+.editor-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: move;
+  background: rgba(255, 255, 255, 0.02);
+}
+.editor-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.editor-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: #d0d0d8;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+}
+.editor-close:hover {
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff6b6b;
+}
+.editor-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px 0;
+  background: rgba(0, 0, 0, 0.15);
+}
+.editor-tab {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: all 150ms ease;
+  position: relative;
+}
+.editor-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+.editor-tab.active {
+  background: rgba(10, 10, 15, 0.75);
+  color: #fff;
+}
+.editor-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+.editor-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+.editor-section {
+  display: none;
+}
+.editor-section.active {
+  display: block;
+}
+.setting-group {
+  margin-bottom: 24px;
+}
+.setting-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+.setting-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.setting-input {
+  flex: 1;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font: inherit;
+  transition: all 150ms ease;
+}
+.setting-input:focus {
+  outline: none;
+  border-color: rgba(102, 126, 234, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+.setting-select {
+  flex: 1;
+  padding: 10px 12px;
+  background: rgba(20, 20, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #f0f0f5;
+  font: inherit;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+.setting-select:focus {
+  outline: none;
+  border-color: rgba(102, 126, 234, 0.5);
+  background: rgba(30, 30, 45, 0.95);
+}
+.setting-select option {
+  background: rgba(20, 20, 30, 1);
+  color: #f0f0f5;
+  padding: 8px;
+}
+.setting-slider {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.setting-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.setting-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.setting-slider-group input[type="number"] {
+  width: 72px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  transition: all 150ms ease;
+}
+.setting-slider-group input[type="number"]:focus {
+  outline: none;
+  border-color: rgba(102, 126, 234, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+.setting-slider-group input[type="number"]::-webkit-inner-spin-button,
+.setting-slider-group input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0.5;
+}
+.setting-value {
+  min-width: 48px;
+  text-align: right;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+.setting-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+.setting-color {
+  width: 60px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+}
+.setting-button {
+  flex: 1;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #fff;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+.setting-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.setting-button:active {
+  background: rgba(255, 255, 255, 0.16);
+}
+.setting-button.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: transparent;
+}
+.setting-button.primary:hover {
+  opacity: 0.9;
+}
+#widget-editor.dragging-editor {
+  cursor: grabbing;
+}
