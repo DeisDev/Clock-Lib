@@ -62,9 +62,10 @@ The clock maintains internal state for all visual options:
 - **Time**: `visible`, `timeFormat` (12/24), `showSeconds`
 - **Date**: `showDate`, `showDay`, `dateFormat` (words/ymd/mdy/dmy)
 - **Meta**: `showWeek`, `showDayNumber`, `showHoliday`, `holidayFormat`, `disableIcons`
-- **Typography (clock)**: `fontIndex`, `fontWeight`, `fontSize`, `scale`, `color`
-- **Typography (info)**: `infoFontIndex`, `infoFontWeight`, `infoFontSize`, `infoScale`
-- **Shadow**: `shadow`, `shadowColor`, `shadowBlur`
+- **Typography (clock)**: `fontIndex`, `fontWeight`, `fontSize`, `scale`, `color`, `letterSpacing`, `opacity`
+- **Typography (info)**: `infoFontIndex`, `infoFontStyle`, `infoFontWeight`, `infoFontSize`, `infoScale`, `infoTextTransform`
+- **Shadow (clock)**: `shadow`, `shadowColor`, `shadowBlur`, `shadowDistance`, `shadowAngle`, `shadowOpacity`
+- **Shadow (info)**: `infoShadow`, `infoShadowColor`, `infoShadowBlur`, `infoShadowDistance`, `infoShadowAngle`, `infoShadowOpacity`
 - **Position**: `posX`, `posY`, `dragEnabled`
 
 ## CLOCK_PROPERTY_KEYS
@@ -84,13 +85,26 @@ Maps internal state to Wallpaper Engine property names:
   fontSize: 'clockfontsize',
   scale: 'clockscale',
   color: 'clockcolor',
+  letterSpacing: 'clockletterspacing',
+  opacity: 'clockopacity',
   shadow: 'clockshadow',
   shadowColor: 'clockshadowcolor',
   shadowBlur: 'clockshadowblur',
+  shadowDistance: 'clockshadowdistance',
+  shadowAngle: 'clockshadowangle',
+  shadowOpacity: 'clockshadowopacity',
   infoFont: 'clockinfofont',
+  infoFontStyle: 'clockinfofontstyle',
   infoFontWeight: 'clockinfofontweight',
   infoFontSize: 'clockinfofontsize',
   infoScale: 'clockinfoscale',
+  infoTextTransform: 'clockinfotexttransform',
+  infoShadow: 'clockinfoshadow',
+  infoShadowColor: 'clockinfoshadowcolor',
+  infoShadowBlur: 'clockinfoshadowblur',
+  infoShadowDistance: 'clockinfoshadowdistance',
+  infoShadowAngle: 'clockinfoshadowangle',
+  infoShadowOpacity: 'clockinfoshadowopacity',
   showWeek: 'clockshowweek',
   showDayNumber: 'clockshowdaynumber',
   showHoliday: 'clockshowholiday',
@@ -99,6 +113,11 @@ Maps internal state to Wallpaper Engine property names:
   editorVisible: 'showwidgeteditor'
 }
 ```
+
+## Preview / Debug Panel
+
+- `preview.html` auto-loads `clock-properties.json` to generate controls, includes a Logs tab (captures `console.*`) and FPS readout, and respects persisted clock position.
+- Dragging the clock itself is toggled in the widget editor (`Drag to Move`) and persists via `storageKey`. The debug panel header is always draggable in the preview.
 
 ## Holidays
 
