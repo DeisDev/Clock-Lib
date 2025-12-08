@@ -281,17 +281,17 @@ export function createClock({
     clockContainer.style.textShadow = shadow;
   }
 
-  function formatTime(date) {
+  function formatTimeParts(date) {
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
     const seconds = state.showSeconds ? `:${date.getSeconds().toString().padStart(2, '0')}` : '';
     if (state.timeFormat === 12) {
       const h = hours % 12 || 12;
       const suffix = hours >= 12 ? 'PM' : 'AM';
-      return `${h}:${minutes}${seconds} ${suffix}`;
+      return { main: `${h}:${minutes}${seconds}`, suffix };
     }
     const h24 = hours.toString().padStart(2, '0');
-    return `${h24}:${minutes}${seconds}`;
+    return { main: `${h24}:${minutes}${seconds}`, suffix: '' };
   }
 
   function formatDateValue(date) {
@@ -319,7 +319,12 @@ export function createClock({
 
   function updateClock() {
     const now = new Date();
-    clockTimeEl.textContent = formatTime(now);
+    const timeParts = formatTimeParts(now);
+    if (timeParts.suffix) {
+      clockTimeEl.innerHTML = `<span class="clock-time-wrap">${timeParts.main}<span class="clock-ampm">${timeParts.suffix}</span></span>`;
+    } else {
+      clockTimeEl.textContent = timeParts.main;
+    }
     const dateLine = formatDateLine(now);
     clockDateEl.textContent = dateLine;
     clockDateEl.style.display = dateLine ? 'block' : 'none';

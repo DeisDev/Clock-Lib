@@ -1,44 +1,52 @@
 {
   "properties": {
-    "section_time": {
-      "order": 5,
-      "text": "Time & Date",
+    "section_clock": {
+      "order": 10,
+      "text": "🕐 Clock",
       "type": "text",
       "value": ""
     },
     "showclock": {
-      "order": 10,
+      "order": 11,
       "text": "Show Clock",
       "type": "bool",
       "value": true
     },
+
+    "section_time": {
+      "order": 20,
+      "text": "📅 Time & Date Display",
+      "type": "text",
+      "value": "",
+      "condition": "showclock.value == true"
+    },
     "clocktimeformat": {
-      "order": 11,
+      "order": 21,
       "text": "Time Format",
       "type": "combo",
       "value": 24,
-      "condition": "showclock = true",
+      "condition": "showclock.value == true",
       "options": [
         { "label": "24 Hour", "value": 24 },
         { "label": "12 Hour", "value": 12 }
       ]
     },
     "clockshowseconds": {
-      "order": 12,
+      "order": 22,
       "text": "Show Seconds",
       "type": "bool",
       "value": false,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
     },
     "clockshowdate": {
-      "order": 13,
+      "order": 23,
       "text": "Show Date",
       "type": "bool",
       "value": true,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
     },
     "clockdateformat": {
-      "order": 14,
+      "order": 24,
       "text": "Date Format",
       "type": "combo",
       "value": "words",
@@ -48,35 +56,43 @@
         { "label": "MM/DD/YYYY", "value": "mdy" },
         { "label": "DD/MM/YYYY", "value": "dmy" }
       ],
-      "condition": "showclock = true && clockshowdate = true"
+      "condition": "showclock.value == true && clockshowdate.value == true"
     },
     "clockshowday": {
-      "order": 15,
+      "order": 25,
       "text": "Show Day of Week",
       "type": "bool",
       "value": true,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
     },
     "clockshowweek": {
-      "order": 16,
+      "order": 26,
       "text": "Show Week Number",
       "type": "bool",
       "value": false,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
     },
     "clockshowdaynumber": {
-      "order": 17,
+      "order": 27,
       "text": "Show Day of Year",
       "type": "bool",
       "value": false,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
+    },
+
+    "section_clock_style": {
+      "order": 30,
+      "text": "🎨 Clock Appearance",
+      "type": "text",
+      "value": "",
+      "condition": "showclock.value == true"
     },
     "clockfont": {
-      "order": 18,
-      "text": "Font",
+      "order": 31,
+      "text": "Time Font",
       "type": "combo",
       "value": 0,
-      "condition": "showclock = true",
+      "condition": "showclock.value == true",
       "options": [
         { "label": "Inter", "value": 0 },
         { "label": "Space Grotesk", "value": 1 },
@@ -87,73 +103,56 @@
         { "label": "Plus Jakarta Sans", "value": 6 }
       ]
     },
-    "clockfontweight": {
-      "order": 19,
-      "text": "Font Weight",
-      "type": "slider",
-      "value": 500,
-      "min": 300,
-      "max": 800,
-      "step": 50,
-      "precision": 0,
-      "condition": "showclock = true"
-    },
     "clockfontsize": {
-      "order": 20,
-      "text": "Font Size",
+      "order": 32,
+      "text": "Time Font Size",
       "type": "slider",
       "value": 48,
       "min": 16,
       "max": 96,
       "step": 1,
       "precision": 0,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
+    },
+    "clockfontweight": {
+      "order": 33,
+      "text": "Time Font Weight",
+      "type": "slider",
+      "value": 500,
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "precision": 0,
+      "condition": "showclock.value == true"
     },
     "clockscale": {
-      "order": 21,
-      "text": "Scale",
+      "order": 34,
+      "text": "Overall Scale",
       "type": "slider",
       "value": 1,
       "min": 0.5,
       "max": 3,
       "precision": 1,
       "step": 0.5,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
     },
     "clockcolor": {
-      "order": 22,
+      "order": 35,
       "text": "Text Color",
       "type": "color",
       "value": "1 1 1",
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
     },
-    "clockshadow": {
-      "order": 23,
-      "text": "Enable Shadow",
-      "type": "bool",
-      "value": true,
-      "condition": "showclock = true"
-    },
-    "clockshadowcolor": {
-      "order": 24,
-      "text": "Shadow Color",
-      "type": "color",
-      "value": "0 0 0",
-      "condition": "showclock = true && clockshadow = true"
-    },
-    "clockshadowblur": {
-      "order": 25,
-      "text": "Shadow Blur",
-      "type": "slider",
-      "value": 12,
-      "min": 0,
-      "max": 24,
-      "step": 1,
-      "precision": 0,
-      "condition": "showclock = true && clockshadow = true"
+
+    "section_clock_info": {
+      "order": 40,
+      "text": "📝 Info Text Style",
+      "type": "text",
+      "value": "",
+      "condition": "showclock.value == true"
     },
     "clockinfofont": {
-      "order": 26,
+      "order": 41,
       "text": "Info Font",
       "type": "combo",
       "value": 0,
@@ -166,21 +165,10 @@
         { "label": "Sora", "value": 5 },
         { "label": "Plus Jakarta Sans", "value": 6 }
       ],
-      "condition": "showclock = true"
-    },
-    "clockinfofontweight": {
-      "order": 27,
-      "text": "Info Font Weight",
-      "type": "slider",
-      "value": 500,
-      "min": 300,
-      "max": 800,
-      "step": 50,
-      "precision": 0,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
     },
     "clockinfofontsize": {
-      "order": 28,
+      "order": 42,
       "text": "Info Font Size",
       "type": "slider",
       "value": 16,
@@ -188,10 +176,21 @@
       "max": 32,
       "step": 1,
       "precision": 0,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
+    },
+    "clockinfofontweight": {
+      "order": 43,
+      "text": "Info Font Weight",
+      "type": "slider",
+      "value": 500,
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "precision": 0,
+      "condition": "showclock.value == true"
     },
     "clockinfoscale": {
-      "order": 29,
+      "order": 44,
       "text": "Info Scale",
       "type": "slider",
       "value": 1,
@@ -199,24 +198,59 @@
       "max": 3,
       "precision": 1,
       "step": 0.1,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
     },
-    "section_meta": {
-      "order": 30,
-      "text": "Meta & Holidays",
+
+    "section_clock_shadow": {
+      "order": 50,
+      "text": "🌑 Shadow",
       "type": "text",
-      "value": ""
+      "value": "",
+      "condition": "showclock.value == true"
+    },
+    "clockshadow": {
+      "order": 51,
+      "text": "Enable Shadow",
+      "type": "bool",
+      "value": true,
+      "condition": "showclock.value == true"
+    },
+    "clockshadowcolor": {
+      "order": 52,
+      "text": "Shadow Color",
+      "type": "color",
+      "value": "0 0 0",
+      "condition": "showclock.value == true && clockshadow.value == true"
+    },
+    "clockshadowblur": {
+      "order": 53,
+      "text": "Shadow Blur",
+      "type": "slider",
+      "value": 12,
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "precision": 0,
+      "condition": "showclock.value == true && clockshadow.value == true"
+    },
+
+    "section_holidays": {
+      "order": 60,
+      "text": "🎄 Holidays",
+      "type": "text",
+      "value": "",
+      "condition": "showclock.value == true"
     },
     "clockshowholiday": {
-      "order": 33,
+      "order": 61,
       "text": "Show Upcoming Holiday",
       "type": "bool",
       "value": false,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true"
     },
     "clockholidayformat": {
-      "order": 34,
-      "text": "Holiday Display",
+      "order": 62,
+      "text": "Countdown Format",
       "type": "combo",
       "value": "days",
       "options": [
@@ -229,23 +263,24 @@
         { "label": "Seconds", "value": "s" },
         { "label": "Date only", "value": "date" }
       ],
-      "condition": "showclock = true && clockshowholiday = true"
+      "condition": "showclock.value == true && clockshowholiday.value == true"
     },
     "clockdisableicons": {
-      "order": 35,
-      "text": "Disable Icons/Emojis",
+      "order": 63,
+      "text": "Disable Holiday Emojis",
       "type": "bool",
       "value": false,
-      "condition": "showclock = true"
+      "condition": "showclock.value == true && clockshowholiday.value == true"
     },
-    "section_editor": {
-      "order": 45,
-      "text": "Editor",
+
+    "section_advanced": {
+      "order": 90,
+      "text": "⚙️ Advanced",
       "type": "text",
       "value": ""
     },
     "showwidgeteditor": {
-      "order": 50,
+      "order": 91,
       "text": "Show Widget Editor",
       "type": "bool",
       "value": false
