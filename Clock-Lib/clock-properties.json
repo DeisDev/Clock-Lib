@@ -100,7 +100,21 @@
         { "label": "Roboto Mono", "value": 3 },
         { "label": "Manrope", "value": 4 },
         { "label": "Sora", "value": 5 },
-        { "label": "Plus Jakarta Sans", "value": 6 }
+        { "label": "Plus Jakarta Sans", "value": 6 },
+        { "label": "Poppins", "value": 7 },
+        { "label": "Outfit", "value": 8 },
+        { "label": "Urbanist", "value": 9 },
+        { "label": "Orbitron", "value": 10 },
+        { "label": "Raleway", "value": 11 },
+        { "label": "Arial", "value": 12 },
+        { "label": "Verdana", "value": 13 },
+        { "label": "Tahoma", "value": 14 },
+        { "label": "Trebuchet MS", "value": 15 },
+        { "label": "Georgia", "value": 16 },
+        { "label": "Times New Roman", "value": 17 },
+        { "label": "Courier New", "value": 18 },
+        { "label": "Impact", "value": 19 },
+        { "label": "Comic Sans MS", "value": 20 }
       ]
     },
     "clockfontsize": {
@@ -143,6 +157,41 @@
       "value": "1 1 1",
       "condition": "showclock.value == true"
     },
+    "clockletterspacing": {
+      "order": 36,
+      "text": "Letter Spacing",
+      "type": "slider",
+      "value": 0,
+      "min": -5,
+      "max": 20,
+      "step": 0.5,
+      "precision": 1,
+      "condition": "showclock.value == true"
+    },
+    "clockopacity": {
+      "order": 37,
+      "text": "Opacity",
+      "type": "slider",
+      "value": 1,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "precision": 2,
+      "condition": "showclock.value == true"
+    },
+    "clocktexttransform": {
+      "order": 38,
+      "text": "Text Transform",
+      "type": "combo",
+      "value": "none",
+      "condition": "showclock.value == true",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Uppercase", "value": "uppercase" },
+        { "label": "Lowercase", "value": "lowercase" },
+        { "label": "Capitalize", "value": "capitalize" }
+      ]
+    },
 
     "section_clock_info": {
       "order": 40,
@@ -163,7 +212,21 @@
         { "label": "Roboto Mono", "value": 3 },
         { "label": "Manrope", "value": 4 },
         { "label": "Sora", "value": 5 },
-        { "label": "Plus Jakarta Sans", "value": 6 }
+        { "label": "Plus Jakarta Sans", "value": 6 },
+        { "label": "Poppins", "value": 7 },
+        { "label": "Outfit", "value": 8 },
+        { "label": "Urbanist", "value": 9 },
+        { "label": "Orbitron", "value": 10 },
+        { "label": "Raleway", "value": 11 },
+        { "label": "Arial", "value": 12 },
+        { "label": "Verdana", "value": 13 },
+        { "label": "Tahoma", "value": 14 },
+        { "label": "Trebuchet MS", "value": 15 },
+        { "label": "Georgia", "value": 16 },
+        { "label": "Times New Roman", "value": 17 },
+        { "label": "Courier New", "value": 18 },
+        { "label": "Impact", "value": 19 },
+        { "label": "Comic Sans MS", "value": 20 }
       ],
       "condition": "showclock.value == true"
     },
@@ -203,14 +266,14 @@
 
     "section_clock_shadow": {
       "order": 50,
-      "text": "🌑 Shadow",
+      "text": "🌑 Clock Shadow",
       "type": "text",
       "value": "",
       "condition": "showclock.value == true"
     },
     "clockshadow": {
       "order": 51,
-      "text": "Enable Shadow",
+      "text": "Enable Clock Shadow",
       "type": "bool",
       "value": true,
       "condition": "showclock.value == true"
@@ -228,28 +291,105 @@
       "type": "slider",
       "value": 12,
       "min": 0,
-      "max": 24,
+      "max": 32,
       "step": 1,
       "precision": 0,
       "condition": "showclock.value == true && clockshadow.value == true"
     },
+    "clockshadowdistance": {
+      "order": 54,
+      "text": "Shadow Distance",
+      "type": "slider",
+      "value": 4,
+      "min": 0,
+      "max": 20,
+      "step": 0.5,
+      "precision": 1,
+      "condition": "showclock.value == true && clockshadow.value == true"
+    },
+    "clockshadowangle": {
+      "order": 55,
+      "text": "Shadow Angle",
+      "type": "slider",
+      "value": 135,
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "precision": 0,
+      "condition": "showclock.value == true && clockshadow.value == true"
+    },
+
+    "section_info_shadow": {
+      "order": 56,
+      "text": "🌓 Info Shadow",
+      "type": "text",
+      "value": "",
+      "condition": "showclock.value == true"
+    },
+    "clockinfoshadow": {
+      "order": 57,
+      "text": "Enable Info Shadow",
+      "type": "bool",
+      "value": true,
+      "condition": "showclock.value == true"
+    },
+    "clockinfoshadowcolor": {
+      "order": 58,
+      "text": "Info Shadow Color",
+      "type": "color",
+      "value": "0 0 0",
+      "condition": "showclock.value == true && clockinfoshadow.value == true"
+    },
+    "clockinfoshadowblur": {
+      "order": 59,
+      "text": "Info Shadow Blur",
+      "type": "slider",
+      "value": 8,
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "precision": 0,
+      "condition": "showclock.value == true && clockinfoshadow.value == true"
+    },
+    "clockinfoshadowdistance": {
+      "order": 60,
+      "text": "Info Shadow Distance",
+      "type": "slider",
+      "value": 2,
+      "min": 0,
+      "max": 20,
+      "step": 0.5,
+      "precision": 1,
+      "condition": "showclock.value == true && clockinfoshadow.value == true"
+    },
+    "clockinfoshadowangle": {
+      "order": 61,
+      "text": "Info Shadow Angle",
+      "type": "slider",
+      "value": 135,
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "precision": 0,
+      "condition": "showclock.value == true && clockinfoshadow.value == true"
+    },
 
     "section_holidays": {
-      "order": 60,
+      "order": 70,
       "text": "🎄 Holidays",
       "type": "text",
       "value": "",
       "condition": "showclock.value == true"
     },
     "clockshowholiday": {
-      "order": 61,
+      "order": 71,
       "text": "Show Upcoming Holiday",
       "type": "bool",
       "value": false,
       "condition": "showclock.value == true"
     },
     "clockholidayformat": {
-      "order": 62,
+      "order": 72,
       "text": "Countdown Format",
       "type": "combo",
       "value": "days",
@@ -266,7 +406,7 @@
       "condition": "showclock.value == true && clockshowholiday.value == true"
     },
     "clockdisableicons": {
-      "order": 63,
+      "order": 73,
       "text": "Disable Holiday Emojis",
       "type": "bool",
       "value": false,

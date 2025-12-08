@@ -10,13 +10,23 @@ export const CLOCK_PROPERTY_KEYS = {
   fontSize: 'clockfontsize',
   scale: 'clockscale',
   color: 'clockcolor',
+  letterSpacing: 'clockletterspacing',
+  opacity: 'clockopacity',
+  textTransform: 'clocktexttransform',
   shadow: 'clockshadow',
   shadowColor: 'clockshadowcolor',
   shadowBlur: 'clockshadowblur',
+  shadowDistance: 'clockshadowdistance',
+  shadowAngle: 'clockshadowangle',
   infoFont: 'clockinfofont',
   infoFontWeight: 'clockinfofontweight',
   infoFontSize: 'clockinfofontsize',
   infoScale: 'clockinfoscale',
+  infoShadow: 'clockinfoshadow',
+  infoShadowColor: 'clockinfoshadowcolor',
+  infoShadowBlur: 'clockinfoshadowblur',
+  infoShadowDistance: 'clockinfoshadowdistance',
+  infoShadowAngle: 'clockinfoshadowangle',
   dateFormat: 'clockdateformat',
   showWeek: 'clockshowweek',
   showDayNumber: 'clockshowdaynumber',
@@ -33,7 +43,21 @@ const CLOCK_FONTS = [
   { href: 'https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap', stack: "'Roboto Mono', 'SFMono-Regular', monospace" },
   { href: 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap', stack: "'Manrope', 'Segoe UI', system-ui, sans-serif" },
   { href: 'https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap', stack: "'Sora', 'Segoe UI', system-ui, sans-serif" },
-  { href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap', stack: "'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif" }
+  { href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap', stack: "'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap', stack: "'Poppins', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap', stack: "'Outfit', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap', stack: "'Urbanist', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap', stack: "'Orbitron', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap', stack: "'Raleway', 'Segoe UI', system-ui, sans-serif" },
+  { stack: "Arial, Helvetica, sans-serif" },
+  { stack: "Verdana, Geneva, sans-serif" },
+  { stack: "Tahoma, Geneva, sans-serif" },
+  { stack: "'Trebuchet MS', Helvetica, sans-serif" },
+  { stack: "Georgia, 'Times New Roman', serif" },
+  { stack: "'Times New Roman', Times, serif" },
+  { stack: "'Courier New', Courier, monospace" },
+  { stack: "Impact, Charcoal, sans-serif" },
+  { stack: "'Comic Sans MS', cursive, sans-serif" }
 ];
 
 const HOLIDAYS = [
@@ -57,9 +81,14 @@ const DEFAULT_STATE = {
   visible: true,
   fontIndex: 0,
   color: '1 1 1',
+  letterSpacing: 0,
+  opacity: 1,
+  textTransform: 'none',
   shadow: true,
   shadowColor: '0 0 0',
   shadowBlur: 12,
+  shadowDistance: 4,
+  shadowAngle: 135,
   fontSize: 48,
   fontWeight: 500,
   scale: 1,
@@ -67,6 +96,11 @@ const DEFAULT_STATE = {
   infoFontWeight: 500,
   infoFontSize: 16,
   infoScale: 1,
+  infoShadow: true,
+  infoShadowColor: '0 0 0',
+  infoShadowBlur: 8,
+  infoShadowDistance: 2,
+  infoShadowAngle: 135,
   timeFormat: 24,
   showSeconds: false,
   showDate: true,
@@ -99,6 +133,7 @@ function hexToRgbString(hex) {
 
 function ensureFontLoaded(index, loadedFontLinks) {
   const font = CLOCK_FONTS[index] || CLOCK_FONTS[0];
+  if (!font.href) return font.stack;
   if (loadedFontLinks.has(font.href)) return font.stack;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
@@ -261,13 +296,17 @@ export function createClock({
     const infoFontStack = ensureFontLoaded(state.infoFontIndex, loadedFontLinks);
     const color = colorToCss(state.color);
     const shadowColor = colorToCss(state.shadowColor);
+    const infoShadowColor = colorToCss(state.infoShadowColor);
     clockContainer.style.left = `${(state.posX * 100).toFixed(3)}%`;
     clockContainer.style.top = `${(state.posY * 100).toFixed(3)}%`;
     clockContainer.style.transform = `translate(-50%, -50%) scale(${state.scale})`;
     clockContainer.style.color = color;
     clockContainer.style.fontFamily = fontStack;
     clockContainer.style.fontWeight = state.fontWeight;
+    clockContainer.style.opacity = state.opacity;
     clockTimeEl.style.fontSize = `${state.fontSize}px`;
+    clockTimeEl.style.letterSpacing = `${state.letterSpacing}px`;
+    clockTimeEl.style.textTransform = state.textTransform;
     const infoSize = state.infoFontSize * state.infoScale;
     clockDateEl.style.fontSize = `${infoSize}px`;
     clockDateEl.style.fontFamily = infoFontStack;
@@ -276,9 +315,29 @@ export function createClock({
     clockMetaEl.style.fontFamily = infoFontStack;
     clockMetaEl.style.fontWeight = state.infoFontWeight;
     clockContainer.classList.toggle('drag-enabled', !!state.dragEnabled);
-    const shadowOffset = state.shadowBlur === 0 ? 2 : 4;
-    const shadow = state.shadow ? `0 ${shadowOffset}px ${state.shadowBlur}px ${shadowColor}` : 'none';
-    clockContainer.style.textShadow = shadow;
+    
+    // Clock shadow with distance/angle
+    if (state.shadow) {
+      const angleRad = (state.shadowAngle * Math.PI) / 180;
+      const offsetX = Math.cos(angleRad) * state.shadowDistance;
+      const offsetY = Math.sin(angleRad) * state.shadowDistance;
+      clockTimeEl.style.textShadow = `${offsetX}px ${offsetY}px ${state.shadowBlur}px ${shadowColor}`;
+    } else {
+      clockTimeEl.style.textShadow = 'none';
+    }
+    
+    // Info shadow with distance/angle
+    if (state.infoShadow) {
+      const angleRad = (state.infoShadowAngle * Math.PI) / 180;
+      const offsetX = Math.cos(angleRad) * state.infoShadowDistance;
+      const offsetY = Math.sin(angleRad) * state.infoShadowDistance;
+      const infoShadow = `${offsetX}px ${offsetY}px ${state.infoShadowBlur}px ${infoShadowColor}`;
+      clockDateEl.style.textShadow = infoShadow;
+      clockMetaEl.style.textShadow = infoShadow;
+    } else {
+      clockDateEl.style.textShadow = 'none';
+      clockMetaEl.style.textShadow = 'none';
+    }
   }
 
   function formatTimeParts(date) {
@@ -578,13 +637,23 @@ export function createClock({
     if (props[propertyKeys.fontSize] !== undefined) state.fontSize = Number(props[propertyKeys.fontSize].value);
     if (props[propertyKeys.scale] !== undefined) state.scale = Number(props[propertyKeys.scale].value);
     if (props[propertyKeys.color] !== undefined) state.color = props[propertyKeys.color].value;
+    if (props[propertyKeys.letterSpacing] !== undefined) state.letterSpacing = Number(props[propertyKeys.letterSpacing].value);
+    if (props[propertyKeys.opacity] !== undefined) state.opacity = Number(props[propertyKeys.opacity].value);
+    if (props[propertyKeys.textTransform] !== undefined) state.textTransform = props[propertyKeys.textTransform].value;
     if (props[propertyKeys.shadow] !== undefined) state.shadow = !!props[propertyKeys.shadow].value;
     if (props[propertyKeys.shadowColor] !== undefined) state.shadowColor = props[propertyKeys.shadowColor].value;
     if (props[propertyKeys.shadowBlur] !== undefined) state.shadowBlur = Number(props[propertyKeys.shadowBlur].value);
+    if (props[propertyKeys.shadowDistance] !== undefined) state.shadowDistance = Number(props[propertyKeys.shadowDistance].value);
+    if (props[propertyKeys.shadowAngle] !== undefined) state.shadowAngle = Number(props[propertyKeys.shadowAngle].value);
     if (props[propertyKeys.infoFont] !== undefined) state.infoFontIndex = Number(props[propertyKeys.infoFont].value);
     if (props[propertyKeys.infoFontWeight] !== undefined) state.infoFontWeight = Number(props[propertyKeys.infoFontWeight].value);
     if (props[propertyKeys.infoFontSize] !== undefined) state.infoFontSize = Number(props[propertyKeys.infoFontSize].value);
     if (props[propertyKeys.infoScale] !== undefined) state.infoScale = Number(props[propertyKeys.infoScale].value);
+    if (props[propertyKeys.infoShadow] !== undefined) state.infoShadow = !!props[propertyKeys.infoShadow].value;
+    if (props[propertyKeys.infoShadowColor] !== undefined) state.infoShadowColor = props[propertyKeys.infoShadowColor].value;
+    if (props[propertyKeys.infoShadowBlur] !== undefined) state.infoShadowBlur = Number(props[propertyKeys.infoShadowBlur].value);
+    if (props[propertyKeys.infoShadowDistance] !== undefined) state.infoShadowDistance = Number(props[propertyKeys.infoShadowDistance].value);
+    if (props[propertyKeys.infoShadowAngle] !== undefined) state.infoShadowAngle = Number(props[propertyKeys.infoShadowAngle].value);
     if (props[propertyKeys.dateFormat] !== undefined) state.dateFormat = props[propertyKeys.dateFormat].value;
     if (props[propertyKeys.showWeek] !== undefined) state.showWeek = !!props[propertyKeys.showWeek].value;
     if (props[propertyKeys.showDayNumber] !== undefined) state.showDayNumber = !!props[propertyKeys.showDayNumber].value;

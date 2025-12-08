@@ -33,6 +33,8 @@
   font-size: 0.35em;
   margin-left: 0.2em;
   white-space: nowrap;
+  font-family: inherit;
+  font-weight: inherit;
 }
 #clock-date {
   margin-top: 6px;
