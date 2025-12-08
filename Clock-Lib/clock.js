@@ -12,21 +12,24 @@ export const CLOCK_PROPERTY_KEYS = {
   color: 'clockcolor',
   letterSpacing: 'clockletterspacing',
   opacity: 'clockopacity',
-  textTransform: 'clocktexttransform',
   shadow: 'clockshadow',
   shadowColor: 'clockshadowcolor',
   shadowBlur: 'clockshadowblur',
   shadowDistance: 'clockshadowdistance',
   shadowAngle: 'clockshadowangle',
+  shadowOpacity: 'clockshadowopacity',
   infoFont: 'clockinfofont',
+  infoFontStyle: 'clockinfofontstyle',
   infoFontWeight: 'clockinfofontweight',
   infoFontSize: 'clockinfofontsize',
   infoScale: 'clockinfoscale',
+  infoTextTransform: 'clockinfotexttransform',
   infoShadow: 'clockinfoshadow',
   infoShadowColor: 'clockinfoshadowcolor',
   infoShadowBlur: 'clockinfoshadowblur',
   infoShadowDistance: 'clockinfoshadowdistance',
   infoShadowAngle: 'clockinfoshadowangle',
+  infoShadowOpacity: 'clockinfoshadowopacity',
   dateFormat: 'clockdateformat',
   showWeek: 'clockshowweek',
   showDayNumber: 'clockshowdaynumber',
@@ -62,13 +65,13 @@ const CLOCK_FONTS = [
 
 const HOLIDAYS = [
   { name: 'New Year', month: 1, day: 1, emoji: '🎉', greeting: 'Happy New Year!' },
-  { name: 'Valentine’s Day', month: 2, day: 14, emoji: '❤️', greeting: 'Happy Valentine’s Day!' },
-  { name: 'International Women’s Day', month: 3, day: 8, emoji: '🌷', greeting: 'Happy Women’s Day!' },
-  { name: 'April Fools’ Day', month: 4, day: 1, emoji: '🤡', greeting: 'Happy April Fools’!' },
+{ name: "Valentine's Day", month: 2, day: 14, emoji: '❤️', greeting: "Happy Valentine's Day!" },
+{ name: "International Women's Day", month: 3, day: 8, emoji: '🌷', greeting: "Happy Women's Day!" },
+{ name: "April Fools' Day", month: 4, day: 1, emoji: '🤡', greeting: "Happy April Fools'!" },
   { name: 'Earth Day', month: 4, day: 22, emoji: '🌍', greeting: 'Happy Earth Day!' },
   { name: 'Labor Day', month: 5, day: 1, emoji: '🛠️', greeting: 'Happy Labor Day!' },
-  { name: 'Mother’s Day', calc: (year) => nthWeekdayOfMonth(year, 4, 0, 2), emoji: '💐', greeting: 'Happy Mother’s Day!' },
-  { name: 'Father’s Day', calc: (year) => nthWeekdayOfMonth(year, 5, 0, 3), emoji: '👔', greeting: 'Happy Father’s Day!' },
+{ name: "Mother's Day", calc: (year) => nthWeekdayOfMonth(year, 4, 0, 2), emoji: '💐', greeting: "Happy Mother's Day!" },
+{ name: "Father's Day", calc: (year) => nthWeekdayOfMonth(year, 5, 0, 3), emoji: '👔', greeting: "Happy Father's Day!" },
   { name: 'Easter', calc: (year) => computeEaster(year), emoji: '🐣', greeting: 'Happy Easter!' },
   { name: 'Halloween', month: 10, day: 31, emoji: '🎃', greeting: 'Happy Halloween!' },
   { name: 'Singles Day', month: 11, day: 11, emoji: '🛍️', greeting: 'Happy Singles Day!' },
@@ -83,24 +86,27 @@ const DEFAULT_STATE = {
   color: '1 1 1',
   letterSpacing: 0,
   opacity: 1,
-  textTransform: 'none',
   shadow: true,
   shadowColor: '0 0 0',
   shadowBlur: 12,
   shadowDistance: 4,
   shadowAngle: 135,
+  shadowOpacity: 0.7,
   fontSize: 48,
   fontWeight: 500,
   scale: 1,
   infoFontIndex: 0,
+  infoFontStyle: 'normal',
   infoFontWeight: 500,
   infoFontSize: 16,
   infoScale: 1,
+  infoTextTransform: 'none',
   infoShadow: true,
   infoShadowColor: '0 0 0',
   infoShadowBlur: 8,
   infoShadowDistance: 2,
   infoShadowAngle: 135,
+  infoShadowOpacity: 0.7,
   timeFormat: 24,
   showSeconds: false,
   showDate: true,
@@ -122,6 +128,15 @@ function colorToCss(rgbString) {
   const [r, g, b] = parts.length >= 3 ? parts : [1, 1, 1];
   const to255 = v => Math.round(Math.max(0, Math.min(1, Number.isFinite(v) ? v : 1)) * 255);
   return `rgb(${to255(r)}, ${to255(g)}, ${to255(b)})`;
+}
+
+function colorToCssWithAlpha(rgbString, alpha = 1) {
+  if (typeof rgbString !== 'string') return `rgba(255,255,255,${alpha})`;
+  const parts = rgbString.trim().split(/\s+/).map(Number);
+  const [r, g, b] = parts.length >= 3 ? parts : [1, 1, 1];
+  const clampAlpha = Math.max(0, Math.min(1, Number(alpha) || 0));
+  const to255 = v => Math.round(Math.max(0, Math.min(1, Number.isFinite(v) ? v : 1)) * 255);
+  return `rgba(${to255(r)}, ${to255(g)}, ${to255(b)}, ${clampAlpha})`;
 }
 
 function hexToRgbString(hex) {
@@ -295,25 +310,29 @@ export function createClock({
     const fontStack = ensureFontLoaded(state.fontIndex, loadedFontLinks);
     const infoFontStack = ensureFontLoaded(state.infoFontIndex, loadedFontLinks);
     const color = colorToCss(state.color);
-    const shadowColor = colorToCss(state.shadowColor);
-    const infoShadowColor = colorToCss(state.infoShadowColor);
+    const shadowColor = colorToCssWithAlpha(state.shadowColor, state.shadowOpacity);
+    const infoShadowColor = colorToCssWithAlpha(state.infoShadowColor, state.infoShadowOpacity);
     clockContainer.style.left = `${(state.posX * 100).toFixed(3)}%`;
     clockContainer.style.top = `${(state.posY * 100).toFixed(3)}%`;
     clockContainer.style.transform = `translate(-50%, -50%) scale(${state.scale})`;
     clockContainer.style.color = color;
     clockContainer.style.fontFamily = fontStack;
     clockContainer.style.fontWeight = state.fontWeight;
+    clockTimeEl.style.fontWeight = state.fontWeight;
     clockContainer.style.opacity = state.opacity;
     clockTimeEl.style.fontSize = `${state.fontSize}px`;
     clockTimeEl.style.letterSpacing = `${state.letterSpacing}px`;
-    clockTimeEl.style.textTransform = state.textTransform;
     const infoSize = state.infoFontSize * state.infoScale;
     clockDateEl.style.fontSize = `${infoSize}px`;
     clockDateEl.style.fontFamily = infoFontStack;
     clockDateEl.style.fontWeight = state.infoFontWeight;
+    clockDateEl.style.fontStyle = state.infoFontStyle;
     clockMetaEl.style.fontSize = `${infoSize}px`;
     clockMetaEl.style.fontFamily = infoFontStack;
     clockMetaEl.style.fontWeight = state.infoFontWeight;
+    clockMetaEl.style.fontStyle = state.infoFontStyle;
+    clockDateEl.style.textTransform = state.infoTextTransform;
+    clockMetaEl.style.textTransform = state.infoTextTransform;
     clockContainer.classList.toggle('drag-enabled', !!state.dragEnabled);
     
     // Clock shadow with distance/angle
@@ -325,7 +344,7 @@ export function createClock({
     } else {
       clockTimeEl.style.textShadow = 'none';
     }
-    
+
     // Info shadow with distance/angle
     if (state.infoShadow) {
       const angleRad = (state.infoShadowAngle * Math.PI) / 180;
@@ -421,7 +440,6 @@ export function createClock({
     const totalMinutes = Math.max(0, Math.floor(diffMs / 60000));
     const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
     const totalHours = Math.max(0, Math.floor(diffMs / 3600000));
-    const totalDays = Math.max(0, Math.floor(diffMs / 86400000));
     const totalWeeks = Math.max(0, Math.floor(diffMs / 604800000));
     if (state.holidayFormat === 'dhm') {
       const { days, hours, minutes } = formatDhm(diffMs);
@@ -639,21 +657,24 @@ export function createClock({
     if (props[propertyKeys.color] !== undefined) state.color = props[propertyKeys.color].value;
     if (props[propertyKeys.letterSpacing] !== undefined) state.letterSpacing = Number(props[propertyKeys.letterSpacing].value);
     if (props[propertyKeys.opacity] !== undefined) state.opacity = Number(props[propertyKeys.opacity].value);
-    if (props[propertyKeys.textTransform] !== undefined) state.textTransform = props[propertyKeys.textTransform].value;
     if (props[propertyKeys.shadow] !== undefined) state.shadow = !!props[propertyKeys.shadow].value;
     if (props[propertyKeys.shadowColor] !== undefined) state.shadowColor = props[propertyKeys.shadowColor].value;
     if (props[propertyKeys.shadowBlur] !== undefined) state.shadowBlur = Number(props[propertyKeys.shadowBlur].value);
     if (props[propertyKeys.shadowDistance] !== undefined) state.shadowDistance = Number(props[propertyKeys.shadowDistance].value);
     if (props[propertyKeys.shadowAngle] !== undefined) state.shadowAngle = Number(props[propertyKeys.shadowAngle].value);
+    if (props[propertyKeys.shadowOpacity] !== undefined) state.shadowOpacity = Number(props[propertyKeys.shadowOpacity].value);
     if (props[propertyKeys.infoFont] !== undefined) state.infoFontIndex = Number(props[propertyKeys.infoFont].value);
+    if (props[propertyKeys.infoFontStyle] !== undefined) state.infoFontStyle = props[propertyKeys.infoFontStyle].value;
     if (props[propertyKeys.infoFontWeight] !== undefined) state.infoFontWeight = Number(props[propertyKeys.infoFontWeight].value);
     if (props[propertyKeys.infoFontSize] !== undefined) state.infoFontSize = Number(props[propertyKeys.infoFontSize].value);
     if (props[propertyKeys.infoScale] !== undefined) state.infoScale = Number(props[propertyKeys.infoScale].value);
+    if (props[propertyKeys.infoTextTransform] !== undefined) state.infoTextTransform = props[propertyKeys.infoTextTransform].value;
     if (props[propertyKeys.infoShadow] !== undefined) state.infoShadow = !!props[propertyKeys.infoShadow].value;
     if (props[propertyKeys.infoShadowColor] !== undefined) state.infoShadowColor = props[propertyKeys.infoShadowColor].value;
     if (props[propertyKeys.infoShadowBlur] !== undefined) state.infoShadowBlur = Number(props[propertyKeys.infoShadowBlur].value);
     if (props[propertyKeys.infoShadowDistance] !== undefined) state.infoShadowDistance = Number(props[propertyKeys.infoShadowDistance].value);
     if (props[propertyKeys.infoShadowAngle] !== undefined) state.infoShadowAngle = Number(props[propertyKeys.infoShadowAngle].value);
+    if (props[propertyKeys.infoShadowOpacity] !== undefined) state.infoShadowOpacity = Number(props[propertyKeys.infoShadowOpacity].value);
     if (props[propertyKeys.dateFormat] !== undefined) state.dateFormat = props[propertyKeys.dateFormat].value;
     if (props[propertyKeys.showWeek] !== undefined) state.showWeek = !!props[propertyKeys.showWeek].value;
     if (props[propertyKeys.showDayNumber] !== undefined) state.showDayNumber = !!props[propertyKeys.showDayNumber].value;

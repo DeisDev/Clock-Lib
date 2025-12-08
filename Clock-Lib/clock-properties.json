@@ -205,6 +205,7 @@
       "text": "Info Font",
       "type": "combo",
       "value": 0,
+      "condition": "showclock.value == true",
       "options": [
         { "label": "Inter", "value": 0 },
         { "label": "Space Grotesk", "value": 1 },
@@ -227,8 +228,7 @@
         { "label": "Courier New", "value": 18 },
         { "label": "Impact", "value": 19 },
         { "label": "Comic Sans MS", "value": 20 }
-      ],
-      "condition": "showclock.value == true"
+      ]
     },
     "clockinfofontsize": {
       "order": 42,
@@ -261,6 +261,29 @@
       "max": 3,
       "precision": 1,
       "step": 0.1,
+      "condition": "showclock.value == true"
+    },
+    "clockinfofontstyle": {
+      "order": 45,
+      "text": "Info Font Style",
+      "type": "combo",
+      "value": "normal",
+      "options": [
+        { "label": "Normal", "value": "normal" },
+        { "label": "Italic", "value": "italic" }
+      ],
+      "condition": "showclock.value == true"
+    },
+    "clockinfotexttransform": {
+      "order": 46,
+      "text": "Info Text Transform",
+      "type": "combo",
+      "value": "none",
+      "options": [
+        { "label": "None", "value": "none" },
+        { "label": "Uppercase", "value": "uppercase" },
+        { "label": "Lowercase", "value": "lowercase" }
+      ],
       "condition": "showclock.value == true"
     },
 
@@ -318,30 +341,41 @@
       "precision": 0,
       "condition": "showclock.value == true && clockshadow.value == true"
     },
+    "clockshadowopacity": {
+      "order": 56,
+      "text": "Shadow Opacity",
+      "type": "slider",
+      "value": 0.7,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "precision": 2,
+      "condition": "showclock.value == true && clockshadow.value == true"
+    },
 
     "section_info_shadow": {
-      "order": 56,
+      "order": 57,
       "text": "🌓 Info Shadow",
       "type": "text",
       "value": "",
       "condition": "showclock.value == true"
     },
     "clockinfoshadow": {
-      "order": 57,
+      "order": 58,
       "text": "Enable Info Shadow",
       "type": "bool",
       "value": true,
       "condition": "showclock.value == true"
     },
     "clockinfoshadowcolor": {
-      "order": 58,
+      "order": 59,
       "text": "Info Shadow Color",
       "type": "color",
       "value": "0 0 0",
       "condition": "showclock.value == true && clockinfoshadow.value == true"
     },
     "clockinfoshadowblur": {
-      "order": 59,
+      "order": 60,
       "text": "Info Shadow Blur",
       "type": "slider",
       "value": 8,
@@ -352,7 +386,7 @@
       "condition": "showclock.value == true && clockinfoshadow.value == true"
     },
     "clockinfoshadowdistance": {
-      "order": 60,
+      "order": 61,
       "text": "Info Shadow Distance",
       "type": "slider",
       "value": 2,
@@ -363,7 +397,7 @@
       "condition": "showclock.value == true && clockinfoshadow.value == true"
     },
     "clockinfoshadowangle": {
-      "order": 61,
+      "order": 62,
       "text": "Info Shadow Angle",
       "type": "slider",
       "value": 135,
@@ -371,6 +405,17 @@
       "max": 360,
       "step": 5,
       "precision": 0,
+      "condition": "showclock.value == true && clockinfoshadow.value == true"
+    },
+    "clockinfoshadowopacity": {
+      "order": 63,
+      "text": "Info Shadow Opacity",
+      "type": "slider",
+      "value": 0.7,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "precision": 2,
       "condition": "showclock.value == true && clockinfoshadow.value == true"
     },
 
