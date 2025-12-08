@@ -1,38 +1,111 @@
 # Clock-Lib
-Reusable clock widget for Wallpaper Engine web wallpapers. Includes DOM, styling, property handling, and editor drag helpers.
+
+Reusable clock widget for Wallpaper Engine web wallpapers.
 
 ## Files
-- `clock.js` — module exporting `createClock` and `CLOCK_PROPERTY_KEYS`.
-- `clock.css` — styles for clock and widget editor.
-- `clock-properties.json` — property definitions to merge into `project.json`.
 
-## Quick integration (new wallpaper)
-1. Copy the `Clock-Lib` folder into your project root.
-2. In `<head>` add: `<link rel="stylesheet" href="Clock-Lib/clock.css">`.
-3. In your main script:
-   ```js
-   import { createClock, CLOCK_PROPERTY_KEYS } from './Clock-Lib/clock.js';
-   const clock = createClock();
-   clock.start();
-   // inside wallpaperPropertyListener.applyUserProperties
-   clock.applyProperties(props);
-   ```
-4. Paste the contents of `Clock-Lib/clock-properties.json.properties` into `project.json.general.properties` (adjust `order` if needed).
-5. Keep `wallpaperPropertyListener` defined at global scope so Wallpaper Engine can deliver property updates.
+| File | Purpose |
+|------|---------|
+| `clock.js` | ES module exporting `createClock()` factory and `CLOCK_PROPERTY_KEYS` map |
+| `clock.css` | Styles for clock container, date/meta lines, and widget editor overlay |
+| `clock-properties.json` | Wallpaper Engine property definitions (merge into your `project.json`) |
 
-## Customization
-- Initial state: pass overrides to `createClock({ initialState: { fontSize: 56, scale: 1.2 } })`.
-- Storage key: `createClock({ storageKey: 'myClockPos' })` if you need a different localStorage entry.
-- Parent node: `createClock({ parent: document.body })` can target another container if desired.
-- Property keys: use `CLOCK_PROPERTY_KEYS` or supply your own mapping via `propertyKeys`.
+## Integration
 
-## Runtime helpers
-- `clock.applyProperties(props)` — call from `applyUserProperties` to sync user settings.
-- `clock.setPosition(x, y)` — programmatically move (0–1 normalized viewport coords).
-- `clock.getState()` — snapshot of current state.
-- `clock.dispose()` — remove DOM and timers if you hot-reload.
+```js
+import { createClock, CLOCK_PROPERTY_KEYS } from './Clock-Lib/clock.js';
 
-## Wallpaper Engine notes
-- Use `window.wallpaperRequestAnimationFrame` if you add custom animation loops; the clock itself uses `setInterval` for 1s ticks.
-- Color properties from Wallpaper Engine are normalized `"r g b"`; the module converts them to CSS automatically.
-- Ensure your `project.json` continues to expose the properties so users can configure the clock.
+const clock = createClock({ parent: document.getElementById('root') });
+clock.start();
+
+window.wallpaperPropertyListener = {
+  applyUserProperties(props) {
+    clock.applyProperties(props);
+  }
+};
+```
+
+Link the stylesheet in `<head>`:
+```html
+<link rel="stylesheet" href="Clock-Lib/clock.css">
+```
+
+Merge `clock-properties.json` contents into your `project.json` under `general.properties`.
+
+## createClock Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `parent` | Element | `document.body` | Container element for clock DOM |
+| `storageKey` | string | `'clockPosition'` | localStorage key for persisting position |
+| `tickMs` | number | `1000` | Update interval in milliseconds |
+| `initialState` | object | `{}` | Override default state values |
+| `propertyKeys` | object | `CLOCK_PROPERTY_KEYS` | Custom property key mapping |
+
+## Public API
+
+| Method | Description |
+|--------|-------------|
+| `start()` | Initialize clock, load saved position, begin ticking |
+| `applyProperties(props)` | Apply Wallpaper Engine property object |
+| `setPosition(x, y)` | Set position (0–1 normalized viewport coordinates) |
+| `getState()` | Return shallow copy of current state |
+| `dispose()` | Remove DOM elements and clear interval |
+| `applyEditorVisibility(show)` | Show/hide the widget editor overlay |
+| `toRgbString(hex)` | Convert `#rrggbb` to `"r g b"` (0–1 floats) |
+| `toHexColor(rgb)` | Convert `"r g b"` to `#rrggbb` |
+
+## State Properties
+
+The clock maintains internal state for all visual options:
+
+- **Time**: `visible`, `timeFormat` (12/24), `showSeconds`
+- **Date**: `showDate`, `showDay`, `dateFormat` (words/ymd/mdy/dmy)
+- **Meta**: `showWeek`, `showDayNumber`, `showHoliday`, `holidayFormat`, `disableIcons`
+- **Typography (clock)**: `fontIndex`, `fontWeight`, `fontSize`, `scale`, `color`
+- **Typography (info)**: `infoFontIndex`, `infoFontWeight`, `infoFontSize`, `infoScale`
+- **Shadow**: `shadow`, `shadowColor`, `shadowBlur`
+- **Position**: `posX`, `posY`, `dragEnabled`
+
+## CLOCK_PROPERTY_KEYS
+
+Maps internal state to Wallpaper Engine property names:
+
+```js
+{
+  show: 'showclock',
+  timeFormat: 'clocktimeformat',
+  showSeconds: 'clockshowseconds',
+  showDate: 'clockshowdate',
+  showDay: 'clockshowday',
+  dateFormat: 'clockdateformat',
+  font: 'clockfont',
+  fontWeight: 'clockfontweight',
+  fontSize: 'clockfontsize',
+  scale: 'clockscale',
+  color: 'clockcolor',
+  shadow: 'clockshadow',
+  shadowColor: 'clockshadowcolor',
+  shadowBlur: 'clockshadowblur',
+  infoFont: 'clockinfofont',
+  infoFontWeight: 'clockinfofontweight',
+  infoFontSize: 'clockinfofontsize',
+  infoScale: 'clockinfoscale',
+  showWeek: 'clockshowweek',
+  showDayNumber: 'clockshowdaynumber',
+  showHoliday: 'clockshowholiday',
+  holidayFormat: 'clockholidayformat',
+  disableIcons: 'clockdisableicons',
+  editorVisible: 'showwidgeteditor'
+}
+```
+
+## Holidays
+
+Built-in holiday list includes fixed dates (Christmas, Halloween, etc.) and computed dates (Easter, Mother's Day, Thanksgiving). Holiday countdown formats: `days`, `dhm`, `dh`, `w`, `h`, `m`, `s`, `date`.
+
+## Wallpaper Engine Notes
+
+- Colors arrive as `"r g b"` (0–1 floats); the module converts automatically.
+- The clock uses `setInterval` for updates; use `wallpaperRequestAnimationFrame` for your own animations.
+- The widget editor is toggled via the `showwidgeteditor` property.

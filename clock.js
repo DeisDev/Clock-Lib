@@ -4,21 +4,53 @@ export const CLOCK_PROPERTY_KEYS = {
   timeFormat: 'clocktimeformat',
   showDate: 'clockshowdate',
   showDay: 'clockshowday',
+  showSeconds: 'clockshowseconds',
   font: 'clockfont',
+  fontWeight: 'clockfontweight',
   fontSize: 'clockfontsize',
   scale: 'clockscale',
   color: 'clockcolor',
   shadow: 'clockshadow',
   shadowColor: 'clockshadowcolor',
   shadowBlur: 'clockshadowblur',
+  infoFont: 'clockinfofont',
+  infoFontWeight: 'clockinfofontweight',
+  infoFontSize: 'clockinfofontsize',
+  infoScale: 'clockinfoscale',
+  dateFormat: 'clockdateformat',
+  showWeek: 'clockshowweek',
+  showDayNumber: 'clockshowdaynumber',
+  showHoliday: 'clockshowholiday',
+  holidayFormat: 'clockholidayformat',
+  disableIcons: 'clockdisableicons',
   editorVisible: 'showwidgeteditor'
 };
 
 const CLOCK_FONTS = [
-  { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap', stack: "'Inter', 'Segoe UI', system-ui, sans-serif" },
-  { href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap', stack: "'Space Grotesk', 'Segoe UI', system-ui, sans-serif" },
-  { href: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&display=swap', stack: "'DM Sans', 'Segoe UI', system-ui, sans-serif" },
-  { href: 'https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap', stack: "'Roboto Mono', 'SFMono-Regular', monospace" }
+  { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', stack: "'Inter', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap', stack: "'Space Grotesk', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap', stack: "'DM Sans', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap', stack: "'Roboto Mono', 'SFMono-Regular', monospace" },
+  { href: 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap', stack: "'Manrope', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap', stack: "'Sora', 'Segoe UI', system-ui, sans-serif" },
+  { href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap', stack: "'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif" }
+];
+
+const HOLIDAYS = [
+  { name: 'New Year', month: 1, day: 1, emoji: '🎉', greeting: 'Happy New Year!' },
+  { name: 'Valentine’s Day', month: 2, day: 14, emoji: '❤️', greeting: 'Happy Valentine’s Day!' },
+  { name: 'International Women’s Day', month: 3, day: 8, emoji: '🌷', greeting: 'Happy Women’s Day!' },
+  { name: 'April Fools’ Day', month: 4, day: 1, emoji: '🤡', greeting: 'Happy April Fools’!' },
+  { name: 'Earth Day', month: 4, day: 22, emoji: '🌍', greeting: 'Happy Earth Day!' },
+  { name: 'Labor Day', month: 5, day: 1, emoji: '🛠️', greeting: 'Happy Labor Day!' },
+  { name: 'Mother’s Day', calc: (year) => nthWeekdayOfMonth(year, 4, 0, 2), emoji: '💐', greeting: 'Happy Mother’s Day!' },
+  { name: 'Father’s Day', calc: (year) => nthWeekdayOfMonth(year, 5, 0, 3), emoji: '👔', greeting: 'Happy Father’s Day!' },
+  { name: 'Easter', calc: (year) => computeEaster(year), emoji: '🐣', greeting: 'Happy Easter!' },
+  { name: 'Halloween', month: 10, day: 31, emoji: '🎃', greeting: 'Happy Halloween!' },
+  { name: 'Singles Day', month: 11, day: 11, emoji: '🛍️', greeting: 'Happy Singles Day!' },
+  { name: 'Thanksgiving (US)', calc: (year) => nthWeekdayOfMonth(year, 10, 4, 4), emoji: '🦃', greeting: 'Happy Thanksgiving!' },
+  { name: 'Black Friday', calc: (year) => addDays(nthWeekdayOfMonth(year, 10, 4, 4), 1), emoji: '🛍️', greeting: 'Happy Black Friday!' },
+  { name: 'Christmas', month: 12, day: 25, emoji: '🎄', greeting: 'Merry Christmas!' }
 ];
 
 const DEFAULT_STATE = {
@@ -29,10 +61,22 @@ const DEFAULT_STATE = {
   shadowColor: '0 0 0',
   shadowBlur: 12,
   fontSize: 48,
+  fontWeight: 500,
   scale: 1,
+  infoFontIndex: 0,
+  infoFontWeight: 500,
+  infoFontSize: 16,
+  infoScale: 1,
   timeFormat: 24,
+  showSeconds: false,
   showDate: true,
   showDay: true,
+  dateFormat: 'words',
+  showWeek: false,
+  showDayNumber: false,
+  showHoliday: false,
+  holidayFormat: 'days',
+  disableIcons: false,
   posX: 0.5,
   posY: 0.5,
   dragEnabled: false
@@ -68,6 +112,67 @@ function clamp01(v) {
   return Math.max(0, Math.min(1, v));
 }
 
+function getIsoWeek(date) {
+  const tmp = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = (tmp.getUTCDay() + 6) % 7;
+  tmp.setUTCDate(tmp.getUTCDate() - dayNum + 3);
+  const firstThursday = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 4));
+  const diff = tmp - firstThursday;
+  return 1 + Math.round(diff / 604800000);
+}
+
+function nthWeekdayOfMonth(year, monthIndex, weekdayIndex, occurrence) {
+  const first = new Date(year, monthIndex, 1);
+  const firstDay = first.getDay();
+  const delta = (weekdayIndex - firstDay + 7) % 7;
+  const day = 1 + delta + (occurrence - 1) * 7;
+  return new Date(year, monthIndex, day);
+}
+
+function computeEaster(year) {
+  // Meeus/Jones/Butcher Gregorian algorithm
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31) - 1; // 0-based
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month, day);
+}
+
+function addDays(date, days) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function getDayOfYear(date) {
+  const start = new Date(date.getFullYear(), 0, 0);
+  const diff = date - start;
+  return Math.floor(diff / 86400000);
+}
+
+function daysDiff(from, to) {
+  const ms = to - from;
+  return Math.floor(ms / 86400000);
+}
+
+function formatDhm(ms) {
+  const totalMinutes = Math.max(0, Math.floor(ms / 60000));
+  const days = Math.floor(totalMinutes / (60 * 24));
+  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+  const minutes = totalMinutes % 60;
+  return { days, hours, minutes };
+}
+
 function buildClockDom(parent) {
   const clockContainer = document.createElement('div');
   clockContainer.id = 'clock-container';
@@ -79,8 +184,22 @@ function buildClockDom(parent) {
   const clockDateEl = document.createElement('div');
   clockDateEl.id = 'clock-date';
 
+  const clockMetaEl = document.createElement('div');
+  clockMetaEl.id = 'clock-meta';
+  const metaWeekEl = document.createElement('div');
+  metaWeekEl.className = 'clock-meta-line';
+  const metaDayNumberEl = document.createElement('div');
+  metaDayNumberEl.className = 'clock-meta-line';
+  const metaHolidayEl = document.createElement('div');
+  metaHolidayEl.className = 'clock-meta-line';
+
+  clockMetaEl.appendChild(metaWeekEl);
+  clockMetaEl.appendChild(metaDayNumberEl);
+  clockMetaEl.appendChild(metaHolidayEl);
+
   clockContainer.appendChild(clockTimeEl);
   clockContainer.appendChild(clockDateEl);
+  clockContainer.appendChild(clockMetaEl);
 
   const widgetEditor = document.createElement('div');
   widgetEditor.id = 'widget-editor';
@@ -116,7 +235,7 @@ function buildClockDom(parent) {
   parent.appendChild(clockContainer);
   parent.appendChild(widgetEditor);
 
-  return { clockContainer, clockTimeEl, clockDateEl, widgetEditor };
+  return { clockContainer, clockTimeEl, clockDateEl, clockMetaEl, metaWeekEl, metaDayNumberEl, metaHolidayEl, widgetEditor };
 }
 
 export function createClock({
@@ -128,7 +247,7 @@ export function createClock({
 } = {}) {
   const state = { ...DEFAULT_STATE, ...initialState };
   const loadedFontLinks = new Set();
-  const { clockContainer, clockTimeEl, clockDateEl, widgetEditor } = buildClockDom(parent);
+  const { clockContainer, clockTimeEl, clockDateEl, clockMetaEl, metaWeekEl, metaDayNumberEl, metaHolidayEl, widgetEditor } = buildClockDom(parent);
   let dragState = { active: false, startX: 0, startY: 0, baseX: 0.5, baseY: 0.5 };
   let editorDragState = { active: false, startX: 0, startY: 0, offsetX: 0, offsetY: 0 };
   let editorVisible = false;
@@ -139,6 +258,7 @@ export function createClock({
     if (!state.visible) return;
 
     const fontStack = ensureFontLoaded(state.fontIndex, loadedFontLinks);
+    const infoFontStack = ensureFontLoaded(state.infoFontIndex, loadedFontLinks);
     const color = colorToCss(state.color);
     const shadowColor = colorToCss(state.shadowColor);
     clockContainer.style.left = `${(state.posX * 100).toFixed(3)}%`;
@@ -146,8 +266,15 @@ export function createClock({
     clockContainer.style.transform = `translate(-50%, -50%) scale(${state.scale})`;
     clockContainer.style.color = color;
     clockContainer.style.fontFamily = fontStack;
+    clockContainer.style.fontWeight = state.fontWeight;
     clockTimeEl.style.fontSize = `${state.fontSize}px`;
-    clockDateEl.style.fontSize = `${Math.max(12, Math.round(state.fontSize * 0.38))}px`;
+    const infoSize = state.infoFontSize * state.infoScale;
+    clockDateEl.style.fontSize = `${infoSize}px`;
+    clockDateEl.style.fontFamily = infoFontStack;
+    clockDateEl.style.fontWeight = state.infoFontWeight;
+    clockMetaEl.style.fontSize = `${infoSize}px`;
+    clockMetaEl.style.fontFamily = infoFontStack;
+    clockMetaEl.style.fontWeight = state.infoFontWeight;
     clockContainer.classList.toggle('drag-enabled', !!state.dragEnabled);
     const shadowOffset = state.shadowBlur === 0 ? 2 : 4;
     const shadow = state.shadow ? `0 ${shadowOffset}px ${state.shadowBlur}px ${shadowColor}` : 'none';
@@ -156,21 +283,37 @@ export function createClock({
 
   function formatTime(date) {
     const hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = state.showSeconds ? `:${date.getSeconds().toString().padStart(2, '0')}` : '';
     if (state.timeFormat === 12) {
       const h = hours % 12 || 12;
-      const minutes = date.getMinutes().toString().padStart(2, '0');
       const suffix = hours >= 12 ? 'PM' : 'AM';
-      return `${h}:${minutes} ${suffix}`;
+      return `${h}:${minutes}${seconds} ${suffix}`;
     }
     const h24 = hours.toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${h24}:${minutes}`;
+    return `${h24}:${minutes}${seconds}`;
+  }
+
+  function formatDateValue(date) {
+    const y = date.getFullYear();
+    const m = (date.getMonth() + 1).toString().padStart(2, '0');
+    const d = date.getDate().toString().padStart(2, '0');
+    switch (state.dateFormat) {
+      case 'ymd':
+        return `${y}-${m}-${d}`;
+      case 'mdy':
+        return `${m}/${d}/${y}`;
+      case 'dmy':
+        return `${d}/${m}/${y}`;
+      default:
+        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
   }
 
   function formatDateLine(date) {
     const parts = [];
     if (state.showDay) parts.push(date.toLocaleDateString(undefined, { weekday: 'long' }));
-    if (state.showDate) parts.push(date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }));
+    if (state.showDate) parts.push(formatDateValue(date));
     return parts.join(' · ');
   }
 
@@ -180,6 +323,95 @@ export function createClock({
     const dateLine = formatDateLine(now);
     clockDateEl.textContent = dateLine;
     clockDateEl.style.display = dateLine ? 'block' : 'none';
+    updateMeta(now);
+  }
+  function nextHoliday(now) {
+    const year = now.getFullYear();
+    let closest = null;
+    for (const h of HOLIDAYS) {
+      let target = getHolidayDate(h, year);
+      if (target < now) {
+        target = getHolidayDate(h, year + 1);
+      }
+      if (!closest || target < closest.date) closest = { ...h, date: target };
+    }
+    return closest;
+  }
+
+  function getHolidayDate(holiday, year) {
+    if (holiday.calc) return holiday.calc(year);
+    return new Date(year, holiday.month - 1, holiday.day);
+  }
+
+  function formatHolidayLine(now) {
+    const holiday = nextHoliday(now);
+    if (!holiday) return '';
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const target = new Date(holiday.date.getFullYear(), holiday.date.getMonth(), holiday.date.getDate());
+    const isToday = target.getTime() === today.getTime();
+    const emoji = state.disableIcons ? '' : `${holiday.emoji || ''} `;
+    if (isToday) {
+      return `${emoji}${holiday.greeting}`.trim();
+    }
+    const diffMs = holiday.date - now;
+    const totalMinutes = Math.max(0, Math.floor(diffMs / 60000));
+    const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
+    const totalHours = Math.max(0, Math.floor(diffMs / 3600000));
+    const totalDays = Math.max(0, Math.floor(diffMs / 86400000));
+    const totalWeeks = Math.max(0, Math.floor(diffMs / 604800000));
+    if (state.holidayFormat === 'dhm') {
+      const { days, hours, minutes } = formatDhm(diffMs);
+      return `${emoji}${days}d ${hours}h ${minutes}m to ${holiday.name}`.trim();
+    }
+    if (state.holidayFormat === 'date') {
+      const dateStr = target.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      return `${emoji}${holiday.name} · ${dateStr}`.trim();
+    }
+    if (state.holidayFormat === 'dh') {
+      const { days, hours } = formatDhm(diffMs);
+      return `${emoji}${days} d ${hours} h to ${holiday.name}`.trim();
+    }
+    if (state.holidayFormat === 'h') {
+      return `${emoji}${totalHours} h to ${holiday.name}`.trim();
+    }
+    if (state.holidayFormat === 'm') {
+      return `${emoji}${totalMinutes} min to ${holiday.name}`.trim();
+    }
+    if (state.holidayFormat === 's') {
+      return `${emoji}${totalSeconds} sec to ${holiday.name}`.trim();
+    }
+    if (state.holidayFormat === 'w') {
+      return `${emoji}${totalWeeks} weeks to ${holiday.name}`.trim();
+    }
+    const daysLeft = daysDiff(today, target);
+    return `${emoji}${daysLeft} days to ${holiday.name}`.trim();
+  }
+
+  function updateMeta(now) {
+    const dayNum = getDayOfYear(now);
+    if (state.showWeek) {
+      metaWeekEl.style.display = 'block';
+      const week = getIsoWeek(now);
+      metaWeekEl.textContent = state.showDayNumber ? `Week ${week} · Day ${dayNum}` : `Week ${week}`;
+    } else {
+      metaWeekEl.style.display = 'none';
+    }
+
+    if (state.showDayNumber && !state.showWeek) {
+      metaDayNumberEl.style.display = 'block';
+      metaDayNumberEl.textContent = `Day ${dayNum}`;
+    } else {
+      metaDayNumberEl.style.display = 'none';
+    }
+
+    if (state.showHoliday) {
+      metaHolidayEl.style.display = 'block';
+      metaHolidayEl.textContent = formatHolidayLine(now);
+    } else {
+      metaHolidayEl.style.display = 'none';
+    }
+
+    clockMetaEl.style.display = (state.showWeek || state.showDayNumber || state.showHoliday) ? 'block' : 'none';
   }
 
   function setClockPosition(px, py) {
@@ -335,13 +567,25 @@ export function createClock({
     if (props[propertyKeys.timeFormat] !== undefined) state.timeFormat = Number(props[propertyKeys.timeFormat].value);
     if (props[propertyKeys.showDate] !== undefined) state.showDate = !!props[propertyKeys.showDate].value;
     if (props[propertyKeys.showDay] !== undefined) state.showDay = !!props[propertyKeys.showDay].value;
+    if (props[propertyKeys.showSeconds] !== undefined) state.showSeconds = !!props[propertyKeys.showSeconds].value;
     if (props[propertyKeys.font] !== undefined) state.fontIndex = Number(props[propertyKeys.font].value);
+    if (props[propertyKeys.fontWeight] !== undefined) state.fontWeight = Number(props[propertyKeys.fontWeight].value);
     if (props[propertyKeys.fontSize] !== undefined) state.fontSize = Number(props[propertyKeys.fontSize].value);
     if (props[propertyKeys.scale] !== undefined) state.scale = Number(props[propertyKeys.scale].value);
     if (props[propertyKeys.color] !== undefined) state.color = props[propertyKeys.color].value;
     if (props[propertyKeys.shadow] !== undefined) state.shadow = !!props[propertyKeys.shadow].value;
     if (props[propertyKeys.shadowColor] !== undefined) state.shadowColor = props[propertyKeys.shadowColor].value;
     if (props[propertyKeys.shadowBlur] !== undefined) state.shadowBlur = Number(props[propertyKeys.shadowBlur].value);
+    if (props[propertyKeys.infoFont] !== undefined) state.infoFontIndex = Number(props[propertyKeys.infoFont].value);
+    if (props[propertyKeys.infoFontWeight] !== undefined) state.infoFontWeight = Number(props[propertyKeys.infoFontWeight].value);
+    if (props[propertyKeys.infoFontSize] !== undefined) state.infoFontSize = Number(props[propertyKeys.infoFontSize].value);
+    if (props[propertyKeys.infoScale] !== undefined) state.infoScale = Number(props[propertyKeys.infoScale].value);
+    if (props[propertyKeys.dateFormat] !== undefined) state.dateFormat = props[propertyKeys.dateFormat].value;
+    if (props[propertyKeys.showWeek] !== undefined) state.showWeek = !!props[propertyKeys.showWeek].value;
+    if (props[propertyKeys.showDayNumber] !== undefined) state.showDayNumber = !!props[propertyKeys.showDayNumber].value;
+    if (props[propertyKeys.showHoliday] !== undefined) state.showHoliday = !!props[propertyKeys.showHoliday].value;
+    if (props[propertyKeys.holidayFormat] !== undefined) state.holidayFormat = props[propertyKeys.holidayFormat].value;
+    if (props[propertyKeys.disableIcons] !== undefined) state.disableIcons = !!props[propertyKeys.disableIcons].value;
     if (props[propertyKeys.editorVisible] !== undefined) showEditor(!!props[propertyKeys.editorVisible].value);
     applyClockStyles();
     updateClock();

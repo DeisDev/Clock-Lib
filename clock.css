@@ -29,6 +29,19 @@
   opacity: 0.9;
 }
 
+#clock-meta {
+  margin-top: 6px;
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  line-height: 1.3;
+  opacity: 0.9;
+}
+
+.clock-meta-line {
+  display: none;
+}
+
 /* Widget Editor */
 #widget-editor {
   position: fixed;

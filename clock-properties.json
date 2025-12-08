@@ -1,5 +1,11 @@
 {
   "properties": {
+    "section_time": {
+      "order": 5,
+      "text": "Time & Date",
+      "type": "text",
+      "value": ""
+    },
     "showclock": {
       "order": 10,
       "text": "Show Clock",
@@ -17,22 +23,56 @@
         { "label": "12 Hour", "value": 12 }
       ]
     },
-    "clockshowdate": {
+    "clockshowseconds": {
       "order": 12,
+      "text": "Show Seconds",
+      "type": "bool",
+      "value": false,
+      "condition": "showclock = true"
+    },
+    "clockshowdate": {
+      "order": 13,
       "text": "Show Date",
       "type": "bool",
       "value": true,
       "condition": "showclock = true"
     },
+    "clockdateformat": {
+      "order": 14,
+      "text": "Date Format",
+      "type": "combo",
+      "value": "words",
+      "options": [
+        { "label": "Words (Jan 1, 2025)", "value": "words" },
+        { "label": "YYYY-MM-DD", "value": "ymd" },
+        { "label": "MM/DD/YYYY", "value": "mdy" },
+        { "label": "DD/MM/YYYY", "value": "dmy" }
+      ],
+      "condition": "showclock = true && clockshowdate = true"
+    },
     "clockshowday": {
-      "order": 13,
+      "order": 15,
       "text": "Show Day of Week",
       "type": "bool",
       "value": true,
       "condition": "showclock = true"
     },
+    "clockshowweek": {
+      "order": 16,
+      "text": "Show Week Number",
+      "type": "bool",
+      "value": false,
+      "condition": "showclock = true"
+    },
+    "clockshowdaynumber": {
+      "order": 17,
+      "text": "Show Day of Year",
+      "type": "bool",
+      "value": false,
+      "condition": "showclock = true"
+    },
     "clockfont": {
-      "order": 14,
+      "order": 18,
       "text": "Font",
       "type": "combo",
       "value": 0,
@@ -41,20 +81,36 @@
         { "label": "Inter", "value": 0 },
         { "label": "Space Grotesk", "value": 1 },
         { "label": "DM Sans", "value": 2 },
-        { "label": "Roboto Mono", "value": 3 }
+        { "label": "Roboto Mono", "value": 3 },
+        { "label": "Manrope", "value": 4 },
+        { "label": "Sora", "value": 5 },
+        { "label": "Plus Jakarta Sans", "value": 6 }
       ]
     },
+    "clockfontweight": {
+      "order": 19,
+      "text": "Font Weight",
+      "type": "slider",
+      "value": 500,
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "precision": 0,
+      "condition": "showclock = true"
+    },
     "clockfontsize": {
-      "order": 15,
+      "order": 20,
       "text": "Font Size",
       "type": "slider",
       "value": 48,
       "min": 16,
       "max": 96,
+      "step": 1,
+      "precision": 0,
       "condition": "showclock = true"
     },
     "clockscale": {
-      "order": 16,
+      "order": 21,
       "text": "Scale",
       "type": "slider",
       "value": 1,
@@ -65,35 +121,128 @@
       "condition": "showclock = true"
     },
     "clockcolor": {
-      "order": 17,
+      "order": 22,
       "text": "Text Color",
       "type": "color",
       "value": "1 1 1",
       "condition": "showclock = true"
     },
     "clockshadow": {
-      "order": 18,
+      "order": 23,
       "text": "Enable Shadow",
       "type": "bool",
       "value": true,
       "condition": "showclock = true"
     },
     "clockshadowcolor": {
-      "order": 19,
+      "order": 24,
       "text": "Shadow Color",
       "type": "color",
       "value": "0 0 0",
       "condition": "showclock = true && clockshadow = true"
     },
     "clockshadowblur": {
-      "order": 20,
+      "order": 25,
       "text": "Shadow Blur",
       "type": "slider",
       "value": 12,
       "min": 0,
       "max": 24,
-      "precision": 1,
+      "step": 1,
+      "precision": 0,
       "condition": "showclock = true && clockshadow = true"
+    },
+    "clockinfofont": {
+      "order": 26,
+      "text": "Info Font",
+      "type": "combo",
+      "value": 0,
+      "options": [
+        { "label": "Inter", "value": 0 },
+        { "label": "Space Grotesk", "value": 1 },
+        { "label": "DM Sans", "value": 2 },
+        { "label": "Roboto Mono", "value": 3 },
+        { "label": "Manrope", "value": 4 },
+        { "label": "Sora", "value": 5 },
+        { "label": "Plus Jakarta Sans", "value": 6 }
+      ],
+      "condition": "showclock = true"
+    },
+    "clockinfofontweight": {
+      "order": 27,
+      "text": "Info Font Weight",
+      "type": "slider",
+      "value": 500,
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "precision": 0,
+      "condition": "showclock = true"
+    },
+    "clockinfofontsize": {
+      "order": 28,
+      "text": "Info Font Size",
+      "type": "slider",
+      "value": 16,
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "precision": 0,
+      "condition": "showclock = true"
+    },
+    "clockinfoscale": {
+      "order": 29,
+      "text": "Info Scale",
+      "type": "slider",
+      "value": 1,
+      "min": 0.5,
+      "max": 3,
+      "precision": 1,
+      "step": 0.1,
+      "condition": "showclock = true"
+    },
+    "section_meta": {
+      "order": 30,
+      "text": "Meta & Holidays",
+      "type": "text",
+      "value": ""
+    },
+    "clockshowholiday": {
+      "order": 33,
+      "text": "Show Upcoming Holiday",
+      "type": "bool",
+      "value": false,
+      "condition": "showclock = true"
+    },
+    "clockholidayformat": {
+      "order": 34,
+      "text": "Holiday Display",
+      "type": "combo",
+      "value": "days",
+      "options": [
+        { "label": "Days", "value": "days" },
+        { "label": "Days/Hours/Minutes", "value": "dhm" },
+        { "label": "Days + Hours", "value": "dh" },
+        { "label": "Weeks", "value": "w" },
+        { "label": "Hours", "value": "h" },
+        { "label": "Minutes", "value": "m" },
+        { "label": "Seconds", "value": "s" },
+        { "label": "Date only", "value": "date" }
+      ],
+      "condition": "showclock = true && clockshowholiday = true"
+    },
+    "clockdisableicons": {
+      "order": 35,
+      "text": "Disable Icons/Emojis",
+      "type": "bool",
+      "value": false,
+      "condition": "showclock = true"
+    },
+    "section_editor": {
+      "order": 45,
+      "text": "Editor",
+      "type": "text",
+      "value": ""
     },
     "showwidgeteditor": {
       "order": 50,
