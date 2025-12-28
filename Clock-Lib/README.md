@@ -1,23 +1,41 @@
 # Clock-Lib
 
-Reusable clock widget for Wallpaper Engine web wallpapers.
+A fully customizable, feature-rich clock widget for Wallpaper Engine web wallpapers. Built with Vue 3 + TypeScript for modern development, with backwards-compatible vanilla JS support.
 
-## Files
+## Features
 
-| File | Purpose |
-|------|---------|
-| `clock.js` | ES module exporting `createClock()` factory and `CLOCK_PROPERTY_KEYS` map |
-| `clock.css` | Styles for clock container, date/meta lines, and widget editor overlay |
-| `clock-properties.json` | Wallpaper Engine property definitions (merge into your `project.json`) |
+- 🕐 **Time Display**: 12/24-hour format, seconds, blinking separator, customizable separators
+- 📅 **Date Display**: Multiple formats including custom patterns, day of week
+- 📝 **Meta Info**: Week number, day of year, holiday countdown
+- 🎨 **Styling**: Custom fonts (25+), colors, opacity, letter spacing, text gradients
+- ✨ **Text Effects**: Gradient text, text outline with configurable width/color
+- 🌑 **Shadows**: Configurable blur, distance, angle, opacity for both time and info text
+- 🖼️ **Background**: Optional panel with blur, opacity, border radius, padding
+- 🎬 **Animations**: Smooth transitions with configurable duration
+- 📱 **Draggable**: Position anywhere on screen with persistence
+- 🛠️ **Debug Panel**: Live property editor, console viewer, presets, export/import
 
-## Integration
+## Quick Start
 
-```js
-import { createClock, CLOCK_PROPERTY_KEYS } from './Clock-Lib/clock.js';
+### Modern (Vue 3 + TypeScript)
 
-const clock = createClock({ parent: document.getElementById('root') });
+```bash
+npm install
+npm run dev      # Development with hot reload
+npm run build    # Production build to dist/
+```
+
+```ts
+import { createClock } from './dist/clock.js';
+
+const clock = createClock({
+  parent: document.getElementById('root')!,
+  debug: false
+});
+
 clock.start();
 
+// Wallpaper Engine integration
 window.wallpaperPropertyListener = {
   applyUserProperties(props) {
     clock.applyProperties(props);
@@ -25,106 +43,132 @@ window.wallpaperPropertyListener = {
 };
 ```
 
-Link the stylesheet in `<head>`:
+### Legacy (Vanilla JS)
+
+The original `clock.js` and `clock.css` files remain available for backwards compatibility:
+
 ```html
 <link rel="stylesheet" href="Clock-Lib/clock.css">
+<script type="module">
+  import { createClock } from './Clock-Lib/clock.js';
+  const clock = createClock({ parent: document.body });
+  clock.start();
+</script>
 ```
 
-Merge `clock-properties.json` contents into your `project.json` under `general.properties`.
+## Project Structure
+
+```
+Clock-Lib/
+├── src/
+│   ├── components/          # Vue components
+│   │   ├── ClockWidget.vue  # Main clock container
+│   │   ├── ClockTime.vue    # Time display with gradient support
+│   │   ├── ClockDate.vue    # Date display
+│   │   ├── ClockMeta.vue    # Week, day number, holiday
+│   │   ├── ClockApp.vue     # Production entry component
+│   │   └── debug/           # Debug panel components
+│   ├── composables/         # Vue composables
+│   ├── stores/              # Pinia state management
+│   ├── types/               # TypeScript definitions
+│   ├── utils/               # Utility functions
+│   ├── clock.ts             # Main library entry
+│   └── main.ts              # Dev server entry
+├── clock.js                 # Legacy vanilla JS (backwards compatible)
+├── clock.css                # Legacy styles
+├── clock-properties.json    # Wallpaper Engine properties
+└── index.html               # Dev preview
+```
 
 ## createClock Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `parent` | Element | `document.body` | Container element for clock DOM |
-| `storageKey` | string | `'clockPosition'` | localStorage key for persisting position |
-| `tickMs` | number | `1000` | Update interval in milliseconds |
-| `initialState` | object | `{}` | Override default state values |
-| `propertyKeys` | object | `CLOCK_PROPERTY_KEYS` | Custom property key mapping |
+| `parent` | `HTMLElement` | `document.body` | Container element |
+| `storageKey` | `string` | `'clockPosition'` | localStorage key for position |
+| `tickMs` | `number` | `1000` | Update interval (ms) |
+| `initialState` | `Partial<ClockState>` | `{}` | Override default state |
+| `propertyKeys` | `ClockPropertyKeys` | `DEFAULT_KEYS` | Custom property mapping |
+| `debug` | `boolean` | `false` | Enable debug panel |
 
-## Public API
+## API
 
 | Method | Description |
 |--------|-------------|
-| `start()` | Initialize clock, load saved position, begin ticking |
-| `applyProperties(props)` | Apply Wallpaper Engine property object |
-| `setPosition(x, y)` | Set position (0–1 normalized viewport coordinates) |
-| `getState()` | Return shallow copy of current state |
-| `dispose()` | Remove DOM elements and clear interval |
-| `applyEditorVisibility(show)` | Show/hide the widget editor overlay |
-| `toRgbString(hex)` | Convert `#rrggbb` to `"r g b"` (0–1 floats) |
-| `toHexColor(rgb)` | Convert `"r g b"` to `#rrggbb` |
+| `start()` | Initialize and begin ticking |
+| `applyProperties(props)` | Apply Wallpaper Engine properties |
+| `setPosition(x, y)` | Set position (0–1 normalized) |
+| `getState()` | Get current state snapshot |
+| `dispose()` | Cleanup and remove |
 
 ## State Properties
 
-The clock maintains internal state for all visual options:
+### Time & Date
+- `visible`, `timeFormat`, `showSeconds`, `separator`, `blinkSeparator`
+- `showDate`, `dateFormat`, `customDateFormat`, `showDay`
+- `ampmPosition` (inline/above/below for 12-hour mode)
 
-- **Time**: `visible`, `timeFormat` (12/24), `showSeconds`
-- **Date**: `showDate`, `showDay`, `dateFormat` (words/ymd/mdy/dmy)
-- **Meta**: `showWeek`, `showDayNumber`, `showHoliday`, `holidayFormat`, `disableIcons`
-- **Typography (clock)**: `fontIndex`, `fontWeight`, `fontSize`, `scale`, `color`, `letterSpacing`, `opacity`
-- **Typography (info)**: `infoFontIndex`, `infoFontStyle`, `infoFontWeight`, `infoFontSize`, `infoScale`, `infoTextTransform`
-- **Shadow (clock)**: `shadow`, `shadowColor`, `shadowBlur`, `shadowDistance`, `shadowAngle`, `shadowOpacity`
-- **Shadow (info)**: `infoShadow`, `infoShadowColor`, `infoShadowBlur`, `infoShadowDistance`, `infoShadowAngle`, `infoShadowOpacity`
-- **Position**: `posX`, `posY`, `dragEnabled`
+### Meta Info
+- `showWeek`, `showDayNumber`, `showHoliday`, `holidayFormat`, `disableIcons`
 
-## CLOCK_PROPERTY_KEYS
+### Typography (Time)
+- `fontIndex`, `fontWeight`, `fontSize`, `scale`, `color`, `letterSpacing`, `opacity`
 
-Maps internal state to Wallpaper Engine property names:
+### Typography (Info)
+- `infoFontIndex`, `infoFontWeight`, `infoFontSize`, `infoScale`
+- `infoFontStyle`, `infoTextTransform`
 
-```js
-{
-  show: 'showclock',
-  timeFormat: 'clocktimeformat',
-  showSeconds: 'clockshowseconds',
-  showDate: 'clockshowdate',
-  showDay: 'clockshowday',
-  dateFormat: 'clockdateformat',
-  font: 'clockfont',
-  fontWeight: 'clockfontweight',
-  fontSize: 'clockfontsize',
-  scale: 'clockscale',
-  color: 'clockcolor',
-  letterSpacing: 'clockletterspacing',
-  opacity: 'clockopacity',
-  shadow: 'clockshadow',
-  shadowColor: 'clockshadowcolor',
-  shadowBlur: 'clockshadowblur',
-  shadowDistance: 'clockshadowdistance',
-  shadowAngle: 'clockshadowangle',
-  shadowOpacity: 'clockshadowopacity',
-  infoFont: 'clockinfofont',
-  infoFontStyle: 'clockinfofontstyle',
-  infoFontWeight: 'clockinfofontweight',
-  infoFontSize: 'clockinfofontsize',
-  infoScale: 'clockinfoscale',
-  infoTextTransform: 'clockinfotexttransform',
-  infoShadow: 'clockinfoshadow',
-  infoShadowColor: 'clockinfoshadowcolor',
-  infoShadowBlur: 'clockinfoshadowblur',
-  infoShadowDistance: 'clockinfoshadowdistance',
-  infoShadowAngle: 'clockinfoshadowangle',
-  infoShadowOpacity: 'clockinfoshadowopacity',
-  showWeek: 'clockshowweek',
-  showDayNumber: 'clockshowdaynumber',
-  showHoliday: 'clockshowholiday',
-  holidayFormat: 'clockholidayformat',
-  disableIcons: 'clockdisableicons',
-  editorVisible: 'showwidgeteditor'
-}
-```
+### Text Effects
+- `textGradient`, `textGradientStart`, `textGradientEnd`, `textGradientAngle`
+- `textOutline`, `textOutlineColor`, `textOutlineWidth`
 
-## Preview / Debug Panel
+### Shadows
+- Clock: `shadow`, `shadowColor`, `shadowBlur`, `shadowDistance`, `shadowAngle`, `shadowOpacity`
+- Info: `infoShadow`, `infoShadowColor`, `infoShadowBlur`, etc.
 
-- `preview.html` auto-loads `clock-properties.json` to generate controls, includes a Logs tab (captures `console.*`) and FPS readout, and respects persisted clock position.
-- Dragging the clock itself is toggled in the widget editor (`Drag to Move`) and persists via `storageKey`. The debug panel header is always draggable in the preview.
+### Background
+- `showBackground`, `backgroundColor`, `backgroundOpacity`
+- `backgroundBlur`, `backgroundBorderRadius`, `backgroundPadding`
+
+### Animation
+- `animateChanges`, `animationDuration`
+
+### Position
+- `posX`, `posY`, `dragEnabled`
+
+## Wallpaper Engine Integration
+
+1. Merge `clock-properties.json` into your `project.json` under `general.properties`
+2. Import and initialize the clock
+3. Connect the property listener
+
+Colors from Wallpaper Engine arrive as `"r g b"` (0–1 floats) and are automatically converted.
+
+## Debug Panel
+
+Open `index.html` in a browser for the development preview with debug panel:
+
+- **Properties Tab**: Live editing of all clock properties with search/filter
+- **Console Tab**: Captured console output with timestamps and levels
+- **Presets Tab**: Save/load presets, export/import configurations
+- **FPS Counter**: Performance monitoring
 
 ## Holidays
 
-Built-in holiday list includes fixed dates (Christmas, Halloween, etc.) and computed dates (Easter, Mother's Day, Thanksgiving). Holiday countdown formats: `days`, `dhm`, `dh`, `w`, `h`, `m`, `s`, `date`.
+Built-in holidays include:
+- Fixed dates: New Year, Valentine's, St. Patrick's, Independence Day, Halloween, Christmas
+- Computed dates: Easter, Mother's Day, Father's Day, Thanksgiving
 
-## Wallpaper Engine Notes
+Countdown formats: `days`, `dhm`, `dh`, `w`, `h`, `m`, `s`, `date`
 
-- Colors arrive as `"r g b"` (0–1 floats); the module converts automatically.
-- The clock uses `setInterval` for updates; use `wallpaperRequestAnimationFrame` for your own animations.
-- The widget editor is toggled via the `showwidgeteditor` property.
+## Development
+
+```bash
+npm run dev       # Start dev server with hot reload
+npm run build     # Build for production
+npm run preview   # Preview production build
+```
+
+## License
+
+MIT
