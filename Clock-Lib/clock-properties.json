@@ -652,14 +652,454 @@
       "condition": "showclock.value == true && clockanimatechanges.value == true"
     },
 
+    "section_audiovisualizer": {
+      "order": 200,
+      "text": "🎵 Audio Visualizer",
+      "type": "text",
+      "value": ""
+    },
+    "audiovisualizershow": {
+      "order": 201,
+      "text": "Show Audio Visualizer",
+      "type": "bool",
+      "value": false
+    },
+    "audiovisualizertype": {
+      "order": 202,
+      "text": "Visualizer Style",
+      "type": "combo",
+      "value": "bar",
+      "condition": "audiovisualizershow.value == true",
+      "options": [
+        { "label": "Bar", "value": "bar" },
+        { "label": "Wave", "value": "wave" },
+        { "label": "Circle", "value": "circle" },
+        { "label": "Particle", "value": "particle" }
+      ]
+    },
+
+    "section_audioprocessing": {
+      "order": 210,
+      "text": "🎚️ Audio Processing",
+      "type": "text",
+      "value": "",
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizersmoothing": {
+      "order": 211,
+      "text": "Smoothing",
+      "type": "slider",
+      "value": 0.8,
+      "min": 0,
+      "max": 0.99,
+      "step": 0.01,
+      "precision": 2,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizersensitivity": {
+      "order": 212,
+      "text": "Sensitivity",
+      "type": "slider",
+      "value": 1.0,
+      "min": 0.1,
+      "max": 3.0,
+      "step": 0.1,
+      "precision": 1,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerminfrequency": {
+      "order": 213,
+      "text": "Min Frequency Range",
+      "type": "slider",
+      "value": 0,
+      "min": 0,
+      "max": 63,
+      "step": 1,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizermaxfrequency": {
+      "order": 214,
+      "text": "Max Frequency Range",
+      "type": "slider",
+      "value": 64,
+      "min": 1,
+      "max": 64,
+      "step": 1,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true"
+    },
+
+    "section_audioappearance": {
+      "order": 220,
+      "text": "🎨 Visualizer Appearance",
+      "type": "text",
+      "value": "",
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerbarcount": {
+      "order": 221,
+      "text": "Bar/Sample Count",
+      "type": "slider",
+      "value": 64,
+      "min": 16,
+      "max": 256,
+      "step": 4,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerbarwidth": {
+      "order": 222,
+      "text": "Bar Width",
+      "type": "slider",
+      "value": 4,
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true && (audiovisualizertype.value == 'bar' || audiovisualizertype.value == 'wave' || audiovisualizertype.value == 'circle')"
+    },
+    "audiovisualizerbargap": {
+      "order": 223,
+      "text": "Bar Gap",
+      "type": "slider",
+      "value": 2,
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true && audiovisualizertype.value == 'bar'"
+    },
+    "audiovisualizerbarradius": {
+      "order": 224,
+      "text": "Bar Corner Radius",
+      "type": "slider",
+      "value": 2,
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true && audiovisualizertype.value == 'bar'"
+    },
+
+    "section_audiocolors": {
+      "order": 230,
+      "text": "🌈 Colors",
+      "type": "text",
+      "value": "",
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizercolor": {
+      "order": 231,
+      "text": "Color",
+      "type": "color",
+      "value": "1 1 1",
+      "condition": "audiovisualizershow.value == true && audiovisualizergradientenabled.value == false && audiovisualizerrainbow.value == false"
+    },
+    "audiovisualizergradientenabled": {
+      "order": 232,
+      "text": "Enable Gradient",
+      "type": "bool",
+      "value": false,
+      "condition": "audiovisualizershow.value == true && audiovisualizerrainbow.value == false"
+    },
+    "audiovisualizergradientstart": {
+      "order": 233,
+      "text": "Gradient Start Color",
+      "type": "color",
+      "value": "1 0.2 0.6",
+      "condition": "audiovisualizershow.value == true && audiovisualizergradientenabled.value == true"
+    },
+    "audiovisualizergradientend": {
+      "order": 234,
+      "text": "Gradient End Color",
+      "type": "color",
+      "value": "0.2 0.6 1",
+      "condition": "audiovisualizershow.value == true && audiovisualizergradientenabled.value == true"
+    },
+    "audiovisualizergradientangle": {
+      "order": 235,
+      "text": "Gradient Angle",
+      "type": "slider",
+      "value": 180,
+      "min": 0,
+      "max": 360,
+      "step": 15,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true && audiovisualizergradientenabled.value == true"
+    },
+    "audiovisualizerrainbow": {
+      "order": 236,
+      "text": "Rainbow Mode",
+      "type": "bool",
+      "value": false,
+      "condition": "audiovisualizershow.value == true"
+    },
+
+    "section_audiobehavior": {
+      "order": 240,
+      "text": "⚡ Behavior",
+      "type": "text",
+      "value": "",
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizermirror": {
+      "order": 241,
+      "text": "Mirror Mode",
+      "type": "bool",
+      "value": false,
+      "condition": "audiovisualizershow.value == true && audiovisualizertype.value != 'particle'"
+    },
+    "audiovisualizerstereo": {
+      "order": 242,
+      "text": "Stereo Mode",
+      "type": "bool",
+      "value": false,
+      "condition": "audiovisualizershow.value == true && audiovisualizertype.value != 'circle' && audiovisualizertype.value != 'particle'"
+    },
+    "audiovisualizerpeakhold": {
+      "order": 243,
+      "text": "Peak Hold",
+      "type": "bool",
+      "value": false,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerdecayrate": {
+      "order": 244,
+      "text": "Decay Rate",
+      "type": "slider",
+      "value": 0.95,
+      "min": 0.8,
+      "max": 0.99,
+      "step": 0.01,
+      "precision": 2,
+      "condition": "audiovisualizershow.value == true && audiovisualizerpeakhold.value == true"
+    },
+
+    "section_audiolayout": {
+      "order": 250,
+      "text": "📐 Layout & Position",
+      "type": "text",
+      "value": "",
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerwidth": {
+      "order": 251,
+      "text": "Width",
+      "type": "slider",
+      "value": 800,
+      "min": 100,
+      "max": 2000,
+      "step": 50,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerheight": {
+      "order": 252,
+      "text": "Height",
+      "type": "slider",
+      "value": 200,
+      "min": 50,
+      "max": 1000,
+      "step": 25,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerposx": {
+      "order": 253,
+      "text": "Position X",
+      "type": "slider",
+      "value": 0.5,
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "precision": 2,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerposy": {
+      "order": 254,
+      "text": "Position Y",
+      "type": "slider",
+      "value": 0.9,
+      "min": 0,
+      "max": 1,
+      "step": 0.01,
+      "precision": 2,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerscale": {
+      "order": 255,
+      "text": "Scale",
+      "type": "slider",
+      "value": 1,
+      "min": 0.25,
+      "max": 3,
+      "step": 0.05,
+      "precision": 2,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerrotation": {
+      "order": 256,
+      "text": "Rotation",
+      "type": "slider",
+      "value": 0,
+      "min": 0,
+      "max": 360,
+      "step": 15,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizeralignment": {
+      "order": 257,
+      "text": "Alignment",
+      "type": "combo",
+      "value": "center",
+      "condition": "audiovisualizershow.value == true",
+      "options": [
+        { "label": "Center", "value": "center" },
+        { "label": "Top", "value": "top" },
+        { "label": "Bottom", "value": "bottom" },
+        { "label": "Left", "value": "left" },
+        { "label": "Right", "value": "right" }
+      ]
+    },
+
+    "section_audioeffects": {
+      "order": 260,
+      "text": "✨ Effects",
+      "type": "text",
+      "value": "",
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerglow": {
+      "order": 261,
+      "text": "Glow Effect",
+      "type": "bool",
+      "value": false,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizerglowcolor": {
+      "order": 262,
+      "text": "Glow Color",
+      "type": "color",
+      "value": "1 1 1",
+      "condition": "audiovisualizershow.value == true && audiovisualizerglow.value == true"
+    },
+    "audiovisualizerglowintensity": {
+      "order": 263,
+      "text": "Glow Intensity",
+      "type": "slider",
+      "value": 10,
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true && audiovisualizerglow.value == true"
+    },
+    "audiovisualizershadow": {
+      "order": 264,
+      "text": "Shadow",
+      "type": "bool",
+      "value": false,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizershadowcolor": {
+      "order": 265,
+      "text": "Shadow Color",
+      "type": "color",
+      "value": "0 0 0",
+      "condition": "audiovisualizershow.value == true && audiovisualizershadow.value == true"
+    },
+    "audiovisualizershadowblur": {
+      "order": 266,
+      "text": "Shadow Blur",
+      "type": "slider",
+      "value": 10,
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true && audiovisualizershadow.value == true"
+    },
+    "audiovisualizershadowdistance": {
+      "order": 267,
+      "text": "Shadow Distance",
+      "type": "slider",
+      "value": 5,
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true && audiovisualizershadow.value == true"
+    },
+    "audiovisualizershadowangle": {
+      "order": 268,
+      "text": "Shadow Angle",
+      "type": "slider",
+      "value": 135,
+      "min": 0,
+      "max": 360,
+      "step": 15,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true && audiovisualizershadow.value == true"
+    },
+    "audiovisualizershadowopacity": {
+      "order": 268.5,
+      "text": "Shadow Opacity",
+      "type": "slider",
+      "value": 0.7,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "precision": 2,
+      "condition": "audiovisualizershow.value == true && audiovisualizershadow.value == true"
+    },
+    "audiovisualizeropacity": {
+      "order": 269,
+      "text": "Opacity",
+      "type": "slider",
+      "value": 1,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "precision": 2,
+      "condition": "audiovisualizershow.value == true"
+    },
+
+    "section_audioanimation": {
+      "order": 270,
+      "text": "🎬 Visualizer Animation",
+      "type": "text",
+      "value": "",
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizeranimatechanges": {
+      "order": 271,
+      "text": "Animate Changes",
+      "type": "bool",
+      "value": true,
+      "condition": "audiovisualizershow.value == true"
+    },
+    "audiovisualizeranimationduration": {
+      "order": 272,
+      "text": "Animation Duration (ms)",
+      "type": "slider",
+      "value": 200,
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "precision": 0,
+      "condition": "audiovisualizershow.value == true && audiovisualizeranimatechanges.value == true"
+    },
+
     "section_advanced": {
-      "order": 120,
+      "order": 300,
       "text": "⚙️ Advanced",
       "type": "text",
       "value": ""
     },
     "showwidgeteditor": {
-      "order": 121,
+      "order": 301,
       "text": "Show Widget Editor",
       "type": "bool",
       "value": false

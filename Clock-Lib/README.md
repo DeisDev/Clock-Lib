@@ -4,6 +4,7 @@ A fully customizable, feature-rich clock widget for Wallpaper Engine web wallpap
 
 ## Features
 
+### Clock Widget
 - 🕐 **Time Display**: 12/24-hour format, seconds, blinking separator, customizable separators
 - 📅 **Date Display**: Multiple formats including custom patterns, day of week
 - 📝 **Meta Info**: Week number, day of year, holiday countdown
@@ -13,7 +14,22 @@ A fully customizable, feature-rich clock widget for Wallpaper Engine web wallpap
 - 🖼️ **Background**: Optional panel with blur, opacity, border radius, padding
 - 🎬 **Animations**: Smooth transitions with configurable duration
 - 📱 **Draggable**: Position anywhere on screen with persistence
-- 🛠️ **Debug Panel**: Live property editor, console viewer, presets, export/import
+
+### Audio Visualizer (New!)
+- 🎵 **Multiple Styles**: Bar, Wave, Circle, and Particle visualizers
+- 🎨 **Customization**: Rainbow mode, gradients, solid colors
+- 🔊 **Audio Processing**: Smoothing, sensitivity, frequency range filtering
+- 🎚️ **Modes**: Stereo, mirror, peak hold effects
+- 📐 **Layout**: Flexible positioning, scaling, rotation, alignment
+- ✨ **Effects**: Glow, shadows, opacity controls
+- ⚡ **Performance**: Canvas-based rendering with FPS limiting
+- 🔌 **WE Integration**: Native Wallpaper Engine audio API support
+
+### Debug Panel
+- 🛠️ **Live Editor**: Real-time property editing with search/filter
+- 📊 **Console**: Captured console output with timestamps
+- 💾 **Presets**: Save/load configurations, export/import
+- 📈 **FPS Counter**: Performance monitoring
 
 ## Quick Start
 
@@ -144,11 +160,21 @@ Clock-Lib/
 
 Colors from Wallpaper Engine arrive as `"r g b"` (0–1 floats) and are automatically converted.
 
+### Audio Visualizer Integration
+
+The audio visualizer automatically integrates with Wallpaper Engine's audio API:
+- Uses `window.wallpaperRegisterAudioListener` for audio data (128 samples: 64 left + 64 right channel)
+- Respects user's FPS limit via `wallpaperPropertyListener.applyGeneralProperties`
+- Audio processing runs ~30 times per second from Wallpaper Engine
+- Automatically adds `"supportsaudioprocessing": true` to your `project.json` when detected
+
+**Note**: The audio visualizer only works in Wallpaper Engine, not in the browser dev environment.
+
 ## Debug Panel
 
 Open `index.html` in a browser for the development preview with debug panel:
 
-- **Properties Tab**: Live editing of all clock properties with search/filter
+- **Properties Tab**: Live editing of all clock and visualizer properties with search/filter
 - **Console Tab**: Captured console output with timestamps and levels
 - **Presets Tab**: Save/load presets, export/import configurations
 - **FPS Counter**: Performance monitoring

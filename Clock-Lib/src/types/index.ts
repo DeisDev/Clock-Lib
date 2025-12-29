@@ -212,3 +212,102 @@ export interface DebugLog {
   text: string
   timestamp: Date
 }
+
+export interface AudioVisualizerState {
+  // Display
+  visible: boolean
+  visualizerType: 'bar' | 'wave' | 'circle' | 'particle'
+  
+  // Audio processing
+  smoothing: number
+  sensitivity: number
+  minFrequency: number
+  maxFrequency: number
+  
+  // Appearance - Bars
+  barCount: number
+  barWidth: number
+  barGap: number
+  barRadius: number
+  
+  // Colors
+  color: string
+  gradientEnabled: boolean
+  gradientStart: string
+  gradientEnd: string
+  gradientAngle: number
+  rainbow: boolean
+  
+  // Behavior
+  mirror: boolean
+  stereo: boolean
+  peakHold: boolean
+  decayRate: number
+  
+  // Layout
+  posX: number
+  posY: number
+  width: number
+  height: number
+  scale: number
+  rotation: number
+  alignment: 'top' | 'center' | 'bottom' | 'left' | 'right'
+  
+  // Effects
+  glow: boolean
+  glowColor: string
+  glowIntensity: number
+  shadow: boolean
+  shadowColor: string
+  shadowBlur: number
+  shadowDistance: number
+  shadowAngle: number
+  shadowOpacity: number
+  opacity: number
+  
+  // Animation
+  animateChanges: boolean
+  animationDuration: number
+}
+
+export interface AudioVisualizerPropertyKeys {
+  show: string
+  visualizerType: string
+  smoothing: string
+  sensitivity: string
+  minFrequency: string
+  maxFrequency: string
+  barCount: string
+  barWidth: string
+  barGap: string
+  barRadius: string
+  color: string
+  gradientEnabled: string
+  gradientStart: string
+  gradientEnd: string
+  gradientAngle: string
+  rainbow: string
+  mirror: string
+  stereo: string
+  peakHold: string
+  decayRate: string
+  posX: string
+  posY: string
+  width: string
+  height: string
+  scale: string
+  rotation: string
+  alignment: string
+  glow: string
+  glowColor: string
+  glowIntensity: string
+  shadow: string
+  shadowColor: string
+  shadowBlur: string
+  shadowDistance: string
+  shadowAngle: string
+  shadowOpacity: string
+  opacity: string
+  animateChanges: string
+  animationDuration: string
+}

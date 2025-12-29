@@ -2,6 +2,7 @@
   <div class="debug-app">
     <div id="wallpaper-root" ref="wallpaperRoot">
       <ClockWidget />
+      <AudioVisualizer v-if="audioStore.state.visible" />
     </div>
     <DebugPanel
       :property-defs="propertyDefs"
@@ -18,8 +19,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import type { PropertyDefinition, WallpaperEngineProperties } from '@/types'
 import { useClockStore, DEFAULT_STATE } from '@/stores/clockStore'
+import { useAudioVisualizerStore } from '@/stores/audioVisualizerStore'
 import DebugPanel from '@/components/debug/DebugPanel.vue'
 import ClockWidget from '@/components/ClockWidget.vue'
+import AudioVisualizer from '@/components/AudioVisualizer.vue'
 
 const wallpaperRoot = ref<HTMLElement | null>(null)
 const propertyDefs = ref<PropertyDefinition[]>([])
@@ -27,6 +30,7 @@ const state = reactive<Record<string, any>>({})
 const defaultState = reactive<Record<string, any>>({})
 
 const store = useClockStore()
+const audioStore = useAudioVisualizerStore()
 
 async function loadProperties() {
   try {
@@ -60,7 +64,9 @@ function buildPropsPayload(): WallpaperEngineProperties {
 }
 
 function applyStateToStore() {
-  store.applyProperties(buildPropsPayload())
+  const payload = buildPropsPayload()
+  store.applyProperties(payload)
+  audioStore.applyProperties(payload)
 }
 
 function onPropertyUpdate(key: string, value: any) {

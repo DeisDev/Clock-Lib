@@ -2,10 +2,11 @@ import { createApp, type App as VueApp } from 'vue'
 import { createPinia } from 'pinia'
 import ClockApp from '@/components/ClockApp.vue'
 import { useClockStore, DEFAULT_STATE, DEFAULT_PROPERTY_KEYS } from '@/stores/clockStore'
+import { useAudioVisualizerStore, DEFAULT_AUDIO_STATE, DEFAULT_AUDIO_PROPERTY_KEYS } from '@/stores/audioVisualizerStore'
 import { hexToRgbString, rgbStringToHex } from '@/utils/colors'
 import type { ClockOptions, ClockInstance, WallpaperEngineProperties, ClockPropertyKeys, ClockState } from '@/types'
 
-export { DEFAULT_STATE, DEFAULT_PROPERTY_KEYS }
+export { DEFAULT_STATE, DEFAULT_PROPERTY_KEYS, DEFAULT_AUDIO_STATE, DEFAULT_AUDIO_PROPERTY_KEYS }
 export type { ClockOptions, ClockInstance, WallpaperEngineProperties, ClockPropertyKeys, ClockState }
 
 export const CLOCK_PROPERTY_KEYS = DEFAULT_PROPERTY_KEYS
@@ -60,7 +61,9 @@ export function createClock(options: ClockOptions = {}): ClockInstance {
 
     applyProperties(props: WallpaperEngineProperties) {
       const store = useClockStore()
+      const audioStore = useAudioVisualizerStore()
       store.applyProperties(props)
+      audioStore.applyProperties(props)
     },
 
     setPosition(x: number, y: number) {
